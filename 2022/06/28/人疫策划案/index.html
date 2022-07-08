@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>人疫策划案 | Cjforeal(鼻屎拌饭)</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">人疫策划案</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 28, 2022&nbsp;&nbsp;16:03:30</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AD%96%E5%88%92/">策划</a>
+                            
+                        </span>
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">2k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">6min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="人疫《Humandemic》策划案自嗨作"><a href="#人疫《Humandemic》策划案自嗨作" class="headerlink" title="人疫《Humandemic》策划案自嗨作"></a>人疫《Humandemic》策划案<br>自嗨作</h2><h3 id="游戏名称"><a href="#游戏名称" class="headerlink" title="游戏名称"></a>游戏名称</h3><p>人疫《Humandemic》</p>
+<h3 id="游戏类型"><a href="#游戏类型" class="headerlink" title="游戏类型"></a>游戏类型</h3><p>多游戏类型，由游戏场景而定，2D，邪典游戏,暴力血腥极度悲观。</p>
+<h3 id="游戏背景"><a href="#游戏背景" class="headerlink" title="游戏背景"></a>游戏背景</h3><p>故事发生在一个幻想世界，全球被一种外来星球的微分生物入侵，整个世界被分为墙内墙外(对我就嗯抄，并且我什么都不知道)，大概就是进击的巨人第一季的情景，墙内墙外都独立互不了解彼此，但都没什么对错之分，墙内高度集权，墙外吉普赛的生活方式，无人种无国界，但被外来生物所统治，外来生物高人一等。</p>
+<p>主角是可以与外来微分生物融合的变异体，在每次死亡后，被外来生物入侵复活，并逐渐被同质化，但一直保持着自己的思维，也变异了一些新能力</p>
+<h3 id="游戏进程"><a href="#游戏进程" class="headerlink" title="游戏进程"></a>游戏进程</h3><h4 id="场景一：主角房间，摄像机视角下的解谜类galgame"><a href="#场景一：主角房间，摄像机视角下的解谜类galgame" class="headerlink" title="场景一：主角房间，摄像机视角下的解谜类galgame"></a>场景一：主角房间，摄像机视角下的解谜类galgame</h4><p>主角在房间血泊中醒来，房间三交互元素<strong>房门</strong>，<strong>电脑</strong>，<strong>窗户</strong>，</p>
+<p>房间剧情线发展：</p>
+<ul>
+<li><p>Day1: 房门传来声音，是<strong>卫兵（墙内党卫队成员）</strong>前来告知现在是危机时刻，外来生物正在组织下一场渗透战，战争随时有可能爆发，所以他们得将你的门装上一个特定的防护设备。并设置外锁，由上头统一管理，居民不能自己打开房门，整个房间处于封闭状态，窗户也无法打开，危机时刻过去再撤掉，并派发给你3天物资，如果需要联系请在网上联系。电脑没有什么消息，窗外也没什么。</p>
+<p>第一天结束</p>
+</li>
+<li><p>Day2：上网冲浪<strong>（需要程序模仿一个浏览器出来，以及聊天窗口，这是这个场景主角与外部联系的唯一途径，对话系统为选择对话模式）</strong>，大抵是一些主旋律的东西，出现一个视频，视频有Day1里出现的卫兵，讲的是该卫兵家人去世仍坚守在第一线，主角深受感动，<em>（可以评论，正能量获得点赞，负能量直接列入失信名单，禁止评论）</em>，你刷着这视频突然看到有一个“反动评论”，你加他好友后直接开始和他对话</p>
+<p>有以下对话可供选择以及选择不同对话后的情况分支：</p>
+<p>A.“草泥马，尼玛有病吧？孤儿东西。”                                   				 			回复：“？”</p>
+<p>B.“你还是我们同胞吗？怎么能在这个特殊时期说这话呢？”							 回复：“批评就不是同胞了？”</p>
+<br>
+
+<p>A.A. “ ?尼玛，墙外狗，见你一次杀你一次”                         								回复：”呵呵，等着” </p>
+<p>A.B. ”官方都辟谣了，造谣传谣的孤儿，笑死我了，还在这装理中客“  			回复：”我说的是事实啊“</p>
+<p>B.A. “你这不是扰乱军心吗，古时候扰乱军心可是要侯斩的！！”                      回复：”说实话也能被治罪吗？“</p>
+<p>B.B. “那你怎么不去批评墙外那些傻逼呢？大概率是外来势力”						回复：“不喜欢比烂，我只是想让我们变得更好才说的这些实话”</p>
+<br>
+
+<p>A.B|B.A|B.B “事实？”							回复：我网址，只能给一半，剩下一半你去想把，不然咱们会被查控到,该网址一天一个视频,看完就会删除 (对话结束)</p>
+<p>A.A “等你家人去逝是吧？”						回复：“xx小区xx栋xx室？”（对话结束，无法联网，无法与外界联系）</p>
+<p>房门紧锁，窗外也没什么</p>
+<p>第二天结束</p>
+</li>
+<li><p>Day3：A.A 无法联网，无法联系上级，房门一直没有解锁，十天后饿死。主角重新在房间血泊中醒来，重开场景1。</p>
+<p>​             A.B|B.A|B.B  解迷找到另一半网址（解什么迷我也不清楚）打开看视频，正式第二天的视频，原来是摆拍。</p>
+<p>​                                （安全系统自动查控本机浏览危险视频，屏蔽设备拒绝联网）</p>
+<p>房门紧锁,对窗居户有一骨瘦如柴的人向你挥舞着牌子写着“我无法联系上面了，我快没有物资了，请救救我”，但你也无法联网，对他无能为力，自己也很焦虑</p>
+<p>第三天结束</p>
+</li>
+<li><p>Day4：物资耗尽非常焦虑，房门紧锁，对窗居户不见身影，此时可以选择打开房门，但无法打开，反动网站今天没有更新</p>
+<p>第四天结束</p>
+</li>
+<li><p>Day5：房门紧锁，可以选择打开房门但无法打开，反动网站今天没有更新</p>
+<p>点击窗户，对窗居户传来一声枪声，墙上溅血</p>
+<p>第五天结束</p>
+<p>Day6：房门紧锁，可以选择打开房门，成功打开，但打开后，摄像头伸出一把枪（摄像机和枪二合一的设备，这正是个场景的<code>Camera</code>，玩家并不是摄像机里看到的角色，而是操控摄像机背后的角色）将主角射杀，镜头一转，转到监控室，密密麻麻倒是监控屏幕，一部分房门紧锁，一部分房门打开，都是被射杀的尸体，镜头缓慢后移，操控摄像机的角色也死了。</p>
+</li>
+</ul>
+<p>场景1结束。</p>
+<h4 id="场景2：走廊，横板卷轴跑酷游戏"><a href="#场景2：走廊，横板卷轴跑酷游戏" class="headerlink" title="场景2：走廊，横板卷轴跑酷游戏"></a>场景2：走廊，横板卷轴跑酷游戏</h4><p>主角被微分生物融合后在房门口的血泊中苏醒，变异了高速移动，二段跳，键盘侠的能力，被党卫兵追赶，主角在走廊和不同栋楼之间跑酷。</p>
+<p>键盘侠能力（跑酷操作的同时玩家用键盘打字，按回车释放）</p>
+<p>FUCK FVK CNM NMSL ：震开后面追赶的党卫兵一段距离</p>
+<p>Fuckoff：挣开党卫兵的控制</p>
+<p>wtf：二段跳后释放可以释放三段跳</p>
+<p>zzzq：向前瞬移一段距离</p>
+<p>阴阳怪气：一段时间内无敌，任何敌方效果无效。</p>
+<p>抽象大师：一段时间内无视碰撞体，可以穿过障碍物</p>
+<p>最后跑到尽头，跳楼死亡</p>
+<h4 id="场景三：街道，横板"><a href="#场景三：街道，横板" class="headerlink" title="场景三：街道，横板"></a>场景三：街道，横板</h4><p>主角被微分生物融合后在房门口的血泊中苏醒，被进一步控制，能力重置，获得新能力–巨大化（大概是想像进击的巨人凯之巨人撞开围墙）</p>
+<p>最后主角被另一个墙内超大型巨人以肖万的姿态膝盖压住窒息而死被丢到墙外。</p>
+<h4 id="场景四：墙外-俯视角射击游戏还是什么不知道"><a href="#场景四：墙外-俯视角射击游戏还是什么不知道" class="headerlink" title="场景四：墙外 俯视角射击游戏还是什么不知道"></a>场景四：墙外 俯视角射击游戏还是什么不知道</h4><p>墙外并非像墙内宣传的那样，人类非常多，并且看起来生活的非常自由自在，</p>
+<p>主角被微分生物融合后在海边醒来,基本完全被微分生物同质化，但还是有自己的思维，能力重置，获得新能力，吞噬，吞噬人类或者尸体越多，复活次数越多，手可幻化为机枪</p>
+<p>墙外大概由外到内三个小场景</p>
+<ul>
+<li><p>小场景1：海滩 都是人类，裸男裸女晒太阳，可以搭话，人人自在满意舒适自由，他们都很关心主角</p>
+</li>
+<li><p>小场景2：街区，游行的人群，举着”HLM“的牌子**(Human lives matter人类的命也是命)**，游行人群的队尾不断着涌现着人类的尸体，游行人数越来越少</p>
+<p>越往里走越能看到更多的堆积着的人类尸体</p>
+</li>
+<li><p>小场景3：微分德州第一小学，微分生物中的小学生都出门迎接主角身体里的外来微分生物，你是他们外来生物小学生的一个实践作业，他们以为你被完全控制，于是你开始屠杀，后来在学校停机坪上找到一艘直升机，开飞**(飞机代号是马航还是911那架可待商榷)**，想逃回墙内，被墙内卫兵击落，坠毁在墙内自己的居所房间。</p>
+<p>游戏结束。</p>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2022/06/28/%E4%BA%BA%E7%96%AB%E7%AD%96%E5%88%92%E6%A1%88/">https://cjforeal.github.io/2022/06/28/%E4%BA%BA%E7%96%AB%E7%AD%96%E5%88%92%E6%A1%88/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/"># 游戏策划</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/07/07/Unity%E9%9A%8F%E7%AC%945/">UGUI画布缩放器详解</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/26/Unity%E9%9A%8F%E7%AC%944/">unity随笔之四元数应用</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>
