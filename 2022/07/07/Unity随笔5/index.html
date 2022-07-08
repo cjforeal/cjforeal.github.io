@@ -241,16 +241,14 @@
 <p><em><strong>原始尺寸 &#x3D; 图片尺寸&#x2F;(Pixels Per Unit &#x2F; Refenrence Pixels Unit)</strong></em></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//官方源码</span><br><span class="line">public float pixelsPerUnit</span><br><span class="line">&#123;</span><br><span class="line">    get</span><br><span class="line">    &#123;</span><br><span class="line">        float spritePixelsPerUnit = 100;</span><br><span class="line">        if (sprite)</span><br><span class="line">            spritePixelsPerUnit = sprite.pixelsPerUnit;</span><br><span class="line"> </span><br><span class="line">        float referencePixelsPerUnit = 100;</span><br><span class="line">        if (canvas)</span><br><span class="line">            referencePixelsPerUnit = canvas.referencePixelsPerUnit;</span><br><span class="line"> </span><br><span class="line">        return spritePixelsPerUnit / referencePixelsPerUnit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ge.csC#</span><br><span class="line">public override void SetNativeSize()</span><br><span class="line">&#123;</span><br><span class="line">    if (overrideSprite != null)</span><br><span class="line">    &#123;</span><br><span class="line">        float w = overrideSprite.rect.width / pixelsPerUnit;</span><br><span class="line">        float h = overrideSprite.rect.height / pixelsPerUnit;</span><br><span class="line">        rectTransform.anchorMax = rectTransform.anchorMin;</span><br><span class="line">        rectTransform.sizeDelta = new Vector2(w, h);</span><br><span class="line">        SetAllDirty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-
-<h4 id="Constant-Pixel-Size固定像素模式"><a href="#Constant-Pixel-Size固定像素模式" class="headerlink" title="Constant Pixel Size固定像素模式"></a>Constant Pixel Size固定像素模式</h4><p><img src="/images/%E7%94%BB%E5%B8%83%E7%BC%A9%E6%94%BE%E5%9B%BA%E5%AE%9A%E5%83%8F%E7%B4%A0%E6%A8%A1%E5%BC%8F.png" alt="图1"></p>
+<h2 id="Constant-Pixel-Size固定像素模式"><a href="#Constant-Pixel-Size固定像素模式" class="headerlink" title="Constant Pixel Size固定像素模式"></a>Constant Pixel Size固定像素模式</h2><p><img src="/images/%E7%94%BB%E5%B8%83%E7%BC%A9%E6%94%BE%E5%9B%BA%E5%AE%9A%E5%83%8F%E7%B4%A0%E6%A8%A1%E5%BC%8F.png" alt="图1"></p>
 <p>用的较少，因为无法自适应屏幕，但可以通过代码改变（手动获取屏幕分辨率，代码调整缩放系数）。</p>
-<h4 id="Scale-With-Screen-Size缩放模式"><a href="#Scale-With-Screen-Size缩放模式" class="headerlink" title="Scale With Screen Size缩放模式"></a>Scale With Screen Size缩放模式</h4><p><img src="/images/%E7%94%BB%E5%B8%83%E7%BC%A9%E6%94%BE2.png" alt="图2"></p>
-<p>先了解一个公式：<em><strong>屏幕分辨率 &#x3D; 画布尺寸  * 缩放系数</strong></em>,</p>
+<h2 id="Scale-With-Screen-Size缩放模式"><a href="#Scale-With-Screen-Size缩放模式" class="headerlink" title="Scale With Screen Size缩放模式"></a>Scale With Screen Size缩放模式</h2><p><img src="/images/%E7%94%BB%E5%B8%83%E7%BC%A9%E6%94%BE2.png" alt="图2"></p>
+<p><strong>Reference Resolution</strong>：参考分辨率，缩放模式下的所有匹配模式都会基于参考分辨率进行自适应计算，总体来说，当前屏幕分辨率大于参考分辨率，Ui变大，反之Ui变小。</p>
+<p>再了解一个公式：<em><strong>屏幕分辨率 &#x3D; 画布尺寸  * 缩放系数</strong></em>,</p>
 <p>屏幕分辨率不变，画布尺寸和缩放系数反比.</p>
 <p><strong>该模式下的三种匹配算法的目的都是为了得到一个缩放系数，从而改变画布尺寸，进而适配屏幕。</strong></p>
-<p><strong>Reference Resolution</strong>：参考分辨率</p>
-<p>缩放模式下的所有匹配模式都会基于参考分辨率进行自适应计算，总体来说，当前屏幕分辨率大于参考分辨率，Ui变大，反之Ui变小。</p>
+<hr>
 <p><strong>Screen Match Mode</strong>：屏幕匹配模式，当前屏幕分辨率不适应参考分辨率时，用于分辨率自适应的匹配模式，就是不同算法。</p>
 <ul>
 <li><p><strong>Expand</strong>  ：水平或垂直扩展画布区域，使画布不会小于参考分辨率，可能产生黑边。</p>
@@ -286,7 +284,7 @@
 <p>对数平均算出  logWeightedAverage&#x3D; 1+（-1-1）*0.5&#x3D;0, scaleFactor&#x3D;1，显然更加准确。</p>
 </li>
 </ul>
-<h4 id="Constant-Physical-Size固定物理模式"><a href="#Constant-Physical-Size固定物理模式" class="headerlink" title="Constant Physical Size固定物理模式"></a>Constant Physical Size固定物理模式</h4><p><img src="/images/%E7%94%BB%E5%B8%83%E7%BC%A9%E6%94%BE3.png" alt="图3"></p>
+<h2 id="Constant-Physical-Size固定物理模式"><a href="#Constant-Physical-Size固定物理模式" class="headerlink" title="Constant Physical Size固定物理模式"></a>Constant Physical Size固定物理模式</h2><p><img src="/images/%E7%94%BB%E5%B8%83%E7%BC%A9%E6%94%BE3.png" alt="图3"></p>
 <p>俺没用过。</p>
 <p><strong>Physical Unit</strong>：Unit物理单位</p>
 <p><strong>Fallback Screen DPI</strong>: 备用DPI，当找不到设备Dpi时，使用此值。</p>
@@ -299,7 +297,7 @@
 
 <p>没用过也不好说效果是什么，官方这样说道</p>
 <p><code>使用 Constant Physical Size 模式时，可按物理单位（如毫米、点或派卡）指定 UI 元素的位置和大小。此模式要求设备正确报告其屏幕 DPI。对于不报告 DPI 的设备，可以指定回退 DPI。</code></p>
-<h4 id="World3D模式-Canvas渲染模式为World-Space的默认缩放模式"><a href="#World3D模式-Canvas渲染模式为World-Space的默认缩放模式" class="headerlink" title="World3D模式(Canvas渲染模式为World Space的默认缩放模式)"></a>World3D模式(Canvas渲染模式为World Space的默认缩放模式)</h4><p><strong>Dynamic Pixels Per Unit</strong>：用于 UI 中动态创建的位图（如文本）的每单位像素量。越大图片越清晰，过大图片会变小。</p>
+<h2 id="World3D模式-Canvas渲染模式为World-Space的默认缩放模式"><a href="#World3D模式-Canvas渲染模式为World-Space的默认缩放模式" class="headerlink" title="World3D模式(Canvas渲染模式为World Space的默认缩放模式)"></a>World3D模式(Canvas渲染模式为World Space的默认缩放模式)</h2><p><strong>Dynamic Pixels Per Unit</strong>：用于 UI 中动态创建的位图（如文本）的每单位像素量。越大图片越清晰，过大图片会变小。</p>
 
         </div>
 
