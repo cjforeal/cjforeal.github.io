@@ -13,7 +13,7 @@
 
 
 
-<title>unity随笔之欧拉角 | Cjforeal(鼻屎拌饭)</title>
+<title>字典遍历的方法以及差别 | Cjforeal(鼻屎拌饭)</title>
 
 
 
@@ -127,76 +127,11 @@
                 <div class="container">
     
     
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
-
-<script>
-    var tocbot_timer;
-    var DEPTH_MAX = 6; // 为 6 时展开所有
-    var tocbot_default_config = {
-        tocSelector: '.tocbot-list',
-        contentSelector: '.post-content',
-        headingSelector: 'h1, h2, h3, h4, h5',
-        orderedList: false,
-        scrollSmooth: true,
-        onClick: extend_click,
-    };
-
-    function extend_click() {
-        clearTimeout(tocbot_timer);
-        tocbot_timer = setTimeout(function() {
-            tocbot.refresh(obj_merge(tocbot_default_config, {
-                hasInnerContainers: true
-            }));
-        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
-    }
-
-    document.ready(function() {
-        tocbot.init(obj_merge(tocbot_default_config, {
-            collapseDepth: 1
-        }));
-    });
-
-    function expand_toc() {
-        var b = document.querySelector('.tocbot-toc-expand');
-        var expanded = b.getAttribute('data-expanded');
-        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
-        tocbot.refresh(obj_merge(tocbot_default_config, {
-            collapseDepth: expanded ? 1 : DEPTH_MAX
-        }));
-        b.innerText = expanded ? 'Expand all' : 'Collapse all';
-    }
-
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    function obj_merge(target, source) {
-        for (var item in source) {
-            if (source.hasOwnProperty(item)) {
-                target[item] = source[item];
-            }
-        }
-        return target;
-    }
-</script>
-    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">unity随笔之欧拉角</h1>
+            <h1 class="post-title">字典遍历的方法以及差别</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +140,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">六月 23, 2022&nbsp;&nbsp;0:56:55</a>
+                        Date: <a href="#">六月 16, 2022&nbsp;&nbsp;15:47:49</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/Unity/">Unity</a>
+                                <a href="/categories/c/">c#</a>
                             
                         </span>
                      
@@ -221,7 +156,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">452</a> 
+                            <a href="">73</a> 
                         </span>
                     
 
@@ -237,31 +172,9 @@
         </header>
 
         <div class="post-content">
-            <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>我们知道unity用于旋转有三个表示方法</p>
-<ul>
-<li>欧拉角旋转</li>
-<li>矩阵旋转</li>
-<li>四元数旋转</li>
-</ul>
-<p>而大多数游戏引擎或者说3D应用上的旋转都是通过4X4矩阵或者四元数记录，由四元数计算，由动态欧拉角表示。</p>
-<p>unity也是这样，unity没有旋转计算是基于欧拉角的，都是由四元数计算封装到上层的。</p>
-<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>但用动态欧拉角表示有两个缺点：一是万向节死锁，二是旋转表示不唯一。</p>
-<p><em><strong>万向节死锁</strong></em>：Unity中的欧拉角采用 Y(Heading)–&gt;X(Pitch)–&gt;Z(Bank) 的轴顺序，当Pitch旋转90或-90时，使得Heading和Bank位于同一平面，这样的结果就是丧失了一个维度的旋转，如图<img src="/images/%E4%B8%87%E5%90%91%E8%8A%82%E6%AD%BB%E9%94%81.png" alt="图1">无法绕z轴旋转。</p>
-<p>Unity内部对此进行了一些限制，但我不(是)求(f)甚()解(w)。</p>
-<p><em>（从大佬那偷了一些知识）</em></p>
-<ul>
-<li><p>对于旋转表示不唯一的限制</p>
-<p>Unity中的欧拉角采用 Y(Heading)–&gt;X(Pitch)–&gt;Z(Bank) 的轴顺序，对应的限制规则，是将**Y和Z轴的旋转数值限制在[-180,180]，中间X轴旋转数值限制在[-90,90]**，至于在<code>Inspector</code>中欧拉角可以无限大的情况，是unity编辑器的额外处理，但记得内部就是这么个范围就好了</p>
-</li>
-<li><p>对于万向节死锁</p>
-<ul>
-<li>限制一：阻止通过transfrom.eulerAngle角度设定插值使得物体通过死锁位置</li>
-<li>限制二：当Pitch正好为±90度时，四元数—&gt;欧拉角 的转换发生变化</li>
-</ul>
-<p>为什么？我也不知道，挖个坑后面补充</p>
-</li>
-</ul>
-<p>所以就要避免通过欧拉角来旋转物体，四元数计算就能避免这些问题。</p>
+            <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foreach(var a in Dic.Keys)&#123;&#125;</span><br><span class="line">遍历字典的键</span><br><span class="line">foreach(var a in Dic.Values)&#123;&#125;</span><br><span class="line">遍历字典的值</span><br><span class="line">foreach（var a in Dic）&#123;&#125;</span><br><span class="line">遍历字典，a类型为KeyValuePair结构体</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>以上局限为Foreach循环为只可读循环，在循环中是无法改变字典值的。</strong></em></p>
 
         </div>
 
@@ -276,7 +189,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://cjforeal.github.io/2022/06/23/unity%E9%9A%8F%E7%AC%943/">https://cjforeal.github.io/2022/06/23/unity%E9%9A%8F%E7%AC%943/</a></span>
+                        <span><a href="https://cjforeal.github.io/2022/06/16/%E5%AD%97%E5%85%B8%E9%81%8D%E5%8E%86%E7%9A%84%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E5%B7%AE%E5%88%AB/">https://cjforeal.github.io/2022/06/16/%E5%AD%97%E5%85%B8%E9%81%8D%E5%8E%86%E7%9A%84%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E5%B7%AE%E5%88%AB/</a></span>
                     </p>
                 
                 
@@ -300,7 +213,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/Unity%E7%AC%94%E8%AE%B0/"># Unity笔记</a>
+                        <a href="/tags/c-%E7%AC%94%E8%AE%B0/"># c#笔记</a>
                     
                         
                 </span>
@@ -313,10 +226,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/06/26/Unity%E9%9A%8F%E7%AC%944/">unity随笔之四元数应用</a>
+                <a class="prev" rel="prev" href="/2022/06/17/Grade2FinalWork/">游戏《占地之王》</a>
             
-            
-            <a class="next" rel="next" href="/2022/06/19/unity%E9%9A%8F%E7%AC%942/">复刻Unity开启协程</a>
             
         </section>
 
