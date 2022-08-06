@@ -13,7 +13,7 @@
 
 
 
-<title>Unity随笔5之删除物体细节 | Cjforeal(鼻屎拌饭)</title>
+<title>Unity随笔6之 | Cjforeal(鼻屎拌饭)</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Unity随笔5之删除物体细节</h1>
+            <h1 class="post-title">Unity随笔6之</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">七月 12, 2022&nbsp;&nbsp;16:15:01</a>
+                        Date: <a href="#">八月 6, 2022&nbsp;&nbsp;23:14:56</a>
                         </span>
                     
                     
@@ -221,7 +221,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">101</a> 
+                            <a href="">387</a> 
                         </span>
                     
 
@@ -237,15 +237,21 @@
         </header>
 
         <div class="post-content">
-            <h3 id="两种方法"><a href="#两种方法" class="headerlink" title="两种方法"></a>两种方法</h3><ol>
-<li><p>Destory()</p>
-<p>异步删除，销毁操作始终延迟到当前更新循环结束，但始终在渲染前完成</p>
-</li>
-<li><p>DestroyImmediate()</p>
-<p>同步删除，在主线程中直接删除，没有延迟</p>
-</li>
-</ol>
-<p><strong>以上两种方法销毁物体并没有释放内存，只是切断了对指定内存空间的引用，标记为NULL，只有等到GC时才会将其释放。</strong></p>
+            <h4 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h4><p>示例1 对象池：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Wardrobe</span> : <span class="title">BasicManager</span>&lt;<span class="title">Wardrobe</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>  Dictionary&lt;<span class="built_in">string</span>, Drawers&gt; objectPool = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>,Drawers&gt;();</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Drawers</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;GameObject&gt; drawer;</span><br><span class="line">    <span class="keyword">public</span> Queue&lt;GameObject&gt; Drawer &#123; <span class="keyword">get</span> &#123; <span class="keyword">return</span> drawer; &#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我要缓存的不只是<code>GameObject</code>的话，同时又要避免用<code>Object</code>导致的拆装箱，就想到了用泛型</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Drawers</span>&lt;<span class="title">T</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;T&gt; drawer;</span><br><span class="line">    <span class="keyword">public</span> Queue&lt;T&gt; Drawer &#123; <span class="keyword">get</span> &#123; <span class="keyword">return</span> drawer; &#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>但又出现了问题，成员泛型即需要泛型类，则对象池类也得是泛型类, 且缓存不同对象即需要多个对象池，显然不符合单例规则</p>
+<p>示例2 观察者事件中心：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EventCenter</span> : <span class="title">BasicManager</span>&lt;<span class="title">EventCenter</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Dictionary&lt;<span class="built_in">string</span>, UnityEvent&gt; eventDic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, UnityEvent&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>相似的问题，如果事件的委托函数需要传参，且不同事件的参数类型还不同（避免用<code>Object</code>导致的拆装箱），要怎么做？</p>
+<h4 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h4><p>以示例2为例,可以这样做</p>
+<p><strong>将委托再向上包装一层，且继承一个父类&#x2F;接口，在使用时再利用里氏转换原则脱去外衣</strong></p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title">IEvent</span>&#123;&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">EventYield</span>&lt;<span class="title">T</span>&gt; : <span class="title">IEvent</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> UnityEvent&lt;T&gt; action;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">EventYield</span> : <span class="title">IEvent</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> UnityEvent action;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EventCenter</span> : <span class="title">BasicManager</span>&lt;<span class="title">EventCenter</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Dictionary&lt;<span class="built_in">string</span>, IEvent&gt; eventDic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, IEvent&gt;();</span><br><span class="line">&#125; </span><br><span class="line">获取有参委托函数时</span><br><span class="line">eventDic[name] <span class="keyword">as</span> EventYield&lt;T&gt;.action</span><br><span class="line">获取无参委托函数时</span><br><span class="line">eventDic[name] <span class="keyword">as</span> EventYield.action</span><br><span class="line">再配合函数重载，这样就可以实现需求了</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
 
         </div>
 
@@ -260,7 +266,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://cjforeal.github.io/2022/07/12/Unity%E9%9A%8F%E7%AC%945/">https://cjforeal.github.io/2022/07/12/Unity%E9%9A%8F%E7%AC%945/</a></span>
+                        <span><a href="https://cjforeal.github.io/2022/08/06/Unity%E9%9A%8F%E7%AC%946/">https://cjforeal.github.io/2022/08/06/Unity%E9%9A%8F%E7%AC%946/</a></span>
                     </p>
                 
                 
@@ -297,10 +303,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/08/06/Unity%E9%9A%8F%E7%AC%946/">Unity随笔6之</a>
             
-            
-            <a class="next" rel="next" href="/2022/07/12/Unity%E7%BC%93%E5%AD%98%E6%B1%A0%E6%A8%A1%E5%9D%97%E6%90%AD%E5%BB%BA/">Unity缓存池模块搭建</a>
+            <a class="next" rel="next" href="/2022/07/12/Unity%E9%9A%8F%E7%AC%945/">Unity随笔5之删除物体细节</a>
             
         </section>
 
