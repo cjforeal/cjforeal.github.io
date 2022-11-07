@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>学习AssetBundle | Cjforeal(鼻屎拌饭)</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">学习AssetBundle</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十月 28, 2022&nbsp;&nbsp;13:24:49</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Unity/">Unity</a>
+                            
+                        </span>
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">2.4k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">11min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="AB包梗概"><a href="#AB包梗概" class="headerlink" title="AB包梗概"></a>AB包梗概</h3><h4 id="是什么"><a href="#是什么" class="headerlink" title="是什么?"></a>是什么?</h4><p>类似与平台的资产压缩包，将资产如模型，贴图，预设体材质球等打包。</p>
+<h4 id="作用？"><a href="#作用？" class="headerlink" title="作用？"></a>作用？</h4><p>通常unity加载资源时，我们使用Resources文件夹，但缺点很多</p>
+<ol>
+<li>打包后即定死，只读，不允许修改，也就不支持动态更新。</li>
+<li>打包后文件较大，占用空间。</li>
+</ol>
+<p>相对Resources，AB可以更好的管理资源</p>
+<ul>
+<li>存储位置可自定义</li>
+<li>压缩方式也可自定义，减少包体大小</li>
+<li>支持热更新(资源热更新和脚本热更新)</li>
+</ul>
+<h4 id="AB包热更新流程"><a href="#AB包热更新流程" class="headerlink" title="AB包热更新流程"></a>AB包热更新流程</h4><ul>
+<li>第一步：连接服务器获取资源服务器地址</li>
+<li>第二步：从资源服务器端(存储着各种AB包)下载资源对比文件</li>
+<li>第三步：客户端通过资源对比文件检测哪些要更新，哪些要下载，然后下载更新AB包。</li>
+</ul>
+<h3 id="AB包的窗口配置"><a href="#AB包的窗口配置" class="headerlink" title="AB包的窗口配置"></a>AB包的窗口配置</h3><p>Unity官方提供了打包工具</p>
+<p>Asset Bundle Browser</p>
+<p>高版本upm内提供了Addressables，其内部封装好了Asset Bundle Browser。也可以去Github下载AB Browser文件导入即可。</p>
+<p>在Window内打开ABB,可以看到如图</p>
+<p><img src="/images%5CAB%E5%8C%85.png" alt="AB包">r</p>
+<p>我们看到了三个页签</p>
+<ul>
+<li>Configure 配置页</li>
+<li>Build 打包页</li>
+<li>Inspect 检视页</li>
+</ul>
+<p>（翻译了一遍。。。。）</p>
+<h4 id="Configure"><a href="#Configure" class="headerlink" title="Configure"></a>Configure</h4><p>直接pass！</p>
+<h4 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h4><p>参数说明</p>
+<ul>
+<li><p>Build Target：面对的打包平台</p>
+</li>
+<li><p>Output Path: 包体输出路径</p>
+</li>
+<li><p>Clear Folder ： 每次打包时先清空，若勾选Copy to StreamingAssets，则复制包体也会清空</p>
+<p>好处：会清楚掉你忘记删的多余文件</p>
+<p>坏处：包体较大时，打包时间变长</p>
+</li>
+<li><p>Copy to StreamingAssets：打包时复制包体到StreamingAssets文件中。</p>
+</li>
+<li><p>Compression ：压缩方式</p>
+<ul>
+<li><p>No Compression </p>
+<p>不压缩，解压快但包体大，不推荐</p>
+</li>
+<li><p>Standard Compression(LZMA)</p>
+<p>极致压缩，包体压缩贼小，但all for one，想用某个资源就得解压所有资源</p>
+</li>
+<li><p>Chunk Based Compression(LZ4)</p>
+<p>压缩程度低于第二种，但用什么解压什么，内存占用小。推荐哦！</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>其他的，咱们把鼠标放上去就知道什么意思了。</p>
+<h5 id="打包后生成的文件说明"><a href="#打包后生成的文件说明" class="headerlink" title="打包后生成的文件说明"></a>打包后生成的文件说明</h5><p>打包后每个资产都会生成了一对文件</p>
+<ul>
+<li><p>AB包文件 二进制文件，记录者对应资产信息</p>
+</li>
+<li><p>manifest文件 记录着AB包文件信息，提供了资源信息，依赖关系，版本信息等</p>
+<p>简单看一下manifest文件信息</p>
+<p><img src="/images%5CMainfest%E6%96%87%E4%BB%B6.png" alt="Manifest文件"></p>
+<p>1~10行：记录着版本，CRC码，哈希码等关键信息</p>
+<p>11~36行：记录着引用的脚本等脚本信息</p>
+<p><strong>注意：C#代码无法被打包进去，这就是为什么我们需要热更新语言。</strong></p>
+<p>37~39行：资源路径</p>
+<p>40：依赖项</p>
+</li>
+</ul>
+<p>生成的文件中有一对文件名和目录相同，称为主包文件，记录着所有AB包依赖关系。</p>
+<h4 id="Inspect"><a href="#Inspect" class="headerlink" title="Inspect"></a>Inspect</h4><p>直接pass！</p>
+<h3 id="使用AB包"><a href="#使用AB包" class="headerlink" title="使用AB包"></a>使用AB包</h3><p>这里只说我用过的</p>
+<p>和使用Resources API异曲同工，注意类名即可</p>
+<ul>
+<li><p>同步加载资源</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//加载AB包</span></span><br><span class="line">AssetBundle a = AssetBundle.LoadFromFile(Application.streamingAssetsPath + <span class="string">&quot;/cube&quot;</span>);</span><br><span class="line"><span class="comment">//加载资源（泛型）</span></span><br><span class="line">GameObject g = a.LoadAsset&lt;GameObject&gt;(<span class="string">&quot;cube&quot;</span>);</span><br><span class="line">Instantiate(g);</span><br><span class="line"><span class="comment">//加载资源非泛型</span></span><br><span class="line">GameObject c = a.LoadAsset(<span class="string">&quot;cube&quot;</span>, <span class="keyword">typeof</span>(GameObject)) <span class="keyword">as</span> GameObject;</span><br><span class="line">Instantiate(c);</span><br><span class="line"></span><br><span class="line">建议使用非泛型方法，因为为Lua并不支持泛型</span><br><span class="line">此外若重复加载AB包会报错</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>异步加载(协程方式)</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">IEnumerator <span class="title">LoadGameObjAsync</span>(<span class="params"><span class="built_in">string</span> ABpath,<span class="built_in">string</span> name</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    AssetBundleCreateRequest ab=  AssetBundle.LoadFromFileAsync(Application.streamingAssetsPath + <span class="string">&quot;/&quot;</span>+ABpath);</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> ab;</span><br><span class="line">    AssetBundleRequest abc= ab.assetBundle.LoadAssetAsync(name, <span class="keyword">typeof</span>(GameObject));</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">return</span> abc;</span><br><span class="line">    Instantiate(abc.asset <span class="keyword">as</span> GameObject);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>异步加载(非协程)</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(Application.streamingAssetsPath + <span class="string">&quot;/cube&quot;</span>);</span><br><span class="line">AssetBundleRequest ff = <span class="literal">null</span>;</span><br><span class="line">request.completed += (f) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">   ff = request.assetBundle.LoadAssetAsync(<span class="string">&quot;cube&quot;</span>);</span><br><span class="line">   ff.completed += (f) =&gt;</span><br><span class="line">   &#123;</span><br><span class="line">       Instantiate(ff.asset <span class="keyword">as</span> GameObject); </span><br><span class="line">   &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>异步加载用协程的方式更加明了，感觉。</p>
+</li>
+<li><p>卸载资源</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//卸载所有AB包，若参数为True，则已经加载的资源也会被卸载，若False，则保留，（好像：保留的资源与原AB包的联系将会切断？）</span></span><br><span class="line">AssetBundle.UnloadAllAssetBundles(<span class="built_in">bool</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//卸载单个AB包，参数同上</span></span><br><span class="line">AssetBundle a = AssetBundle.LoadFromFile(Application.streamingAssetsPath + <span class="string">&quot;/cube&quot;</span>);</span><br><span class="line">a.Unload(<span class="literal">false</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="AB包的依赖关系"><a href="#AB包的依赖关系" class="headerlink" title="AB包的依赖关系"></a>AB包的依赖关系</h3><p>如果一个或者多个 UnityEngine.Objects 引用了其他 AssetBundle 中的 UnityEngine.Object，那么 AssetBundle 之间就产生的依赖关系。相反，如果 UnityEngine.ObjectA 所引用的UnityEngine.ObjectB 不是其他 AssetBundle 中的，那么依赖就不会产生。</p>
+<p><strong>所以当我们加载一个资源却没有加载其依赖项的AB包时，加载的资源将会缺失其依赖资源</strong>，在unity内试试就知道啦</p>
+<p>所以就得加载依赖项的AB包，但如果一个资源有多个AB包依赖，一个一个加载很繁琐，这时候就可以用到主包了，它记录着所有依赖关系。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">AssetBundle a = AssetBundle.LoadFromFile(Application.streamingAssetsPath + <span class="string">&quot;/cube&quot;</span>);</span><br><span class="line"><span class="comment">//加载主包文件</span></span><br><span class="line">AssetBundle main = AssetBundle.LoadFromFile(Application.streamingAssetsPath + <span class="string">&quot;/StandaloneWindows&quot;</span>);</span><br><span class="line"><span class="comment">//加载主包manifest文件，固定名字为&quot;AssetBundleManifest&quot;</span></span><br><span class="line">AssetBundleManifest manifest = main.LoadAsset(<span class="string">&quot;AssetBundleManifest&quot;</span>, <span class="keyword">typeof</span>(AssetBundleManifest)) <span class="keyword">as</span> AssetBundleManifest;</span><br><span class="line"><span class="comment">//获取对应包文件的依赖包名字</span></span><br><span class="line"><span class="built_in">string</span>[] strs = manifest.GetAllDependencies(a.name);</span><br><span class="line"><span class="keyword">foreach</span>(<span class="keyword">var</span> k <span class="keyword">in</span> strs)</span><br><span class="line">  &#123;   </span><br><span class="line">      AssetBundle.LoadFromFile(Application.streamingAssetsPath + <span class="string">&quot;/&quot;</span>+k);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">GameObject g = a.LoadAsset&lt;GameObject&gt;(<span class="string">&quot;cube&quot;</span>);</span><br><span class="line">Instantiate(g);</span><br></pre></td></tr></table></figure>
+
+<p>这样写有个缺点：</p>
+<p>一个AB包中两个资源分别依赖两个不同的AB包，而当我们加载其中一个资源时将会加载所有依赖包，而不是加载指定资源的依赖包。</p>
+<h3 id="单例AB包资源管理器"><a href="#单例AB包资源管理器" class="headerlink" title="单例AB包资源管理器"></a>单例AB包资源管理器</h3><p>学了后就正好练练手，代码如下</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> Cysharp.Threading.Tasks;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.Events;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ABMgr</span> : <span class="title">Singleton</span>&lt;<span class="title">ABMgr</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> AssetBundle main;</span><br><span class="line">    <span class="keyword">private</span> AssetBundleManifest ABmanifest;</span><br><span class="line">    <span class="keyword">public</span> Dictionary&lt;<span class="built_in">string</span>, AssetBundle&gt; ABBundles ;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ABMgr</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        ABBundles = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, AssetBundle&gt;();</span><br><span class="line">        main = AssetBundle.LoadFromFile(PATH + MAiN_AB_NAME);</span><br><span class="line">        ABmanifest=main.LoadAsset&lt;AssetBundleManifest&gt;(<span class="string">&quot;AssetBundleManifest&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//主包路径</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MAiN_AB_NAME</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> <span class="string">&quot;StandaloneWindows&quot;</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//加载路径</span></span><br><span class="line">    <span class="keyword">public</span>  <span class="built_in">string</span> PATH</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> Application.streamingAssetsPath + <span class="string">&quot;/&quot;</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> AssetBundle Main</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> main; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> AssetBundleManifest ABManifest</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> ABmanifest; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 卸载AB包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;name&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;a&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;exception cref=&quot;System.Exception&quot;&gt;</span><span class="doctag">&lt;/exception&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">UnloadAB</span>(<span class="params"><span class="built_in">string</span> name, <span class="built_in">bool</span> a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!ABBundles.ContainsKey(name)) <span class="keyword">throw</span> <span class="keyword">new</span> System.Exception(<span class="string">&quot;无指定包&quot;</span>);</span><br><span class="line">        ABBundles[name].Unload(a);</span><br><span class="line">        ABBundles.Remove(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 卸载所有包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;a&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">UnloadAllAB</span>(<span class="params"><span class="built_in">bool</span> a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        AssetBundle.UnloadAllAssetBundles(a);</span><br><span class="line">        ABBundles.Clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 重新加载主包和依赖包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ReloadNecessaryBundle</span>()</span></span><br><span class="line">    &#123;   </span><br><span class="line">        <span class="keyword">if</span>(main==<span class="literal">null</span>)</span><br><span class="line">            main = AssetBundle.LoadFromFile(PATH + MAiN_AB_NAME);</span><br><span class="line">        <span class="keyword">if</span>(ABmanifest==<span class="literal">null</span>)</span><br><span class="line">            ABmanifest = Main.LoadAsset&lt;AssetBundleManifest&gt;(<span class="string">&quot;AssetBundleManifest&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 加载AB包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;exception cref=&quot;System.Exception&quot;&gt;</span>加载失败<span class="doctag">&lt;/exception&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AssetBundle <span class="title">LoadAB</span>(<span class="params"><span class="built_in">string</span> ABName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        AssetBundle bundle = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(!ABBundles.ContainsKey(ABName))</span><br><span class="line">        &#123;</span><br><span class="line">            bundle = AssetBundle.LoadFromFile(PATH + ABName);</span><br><span class="line">            ABBundles.Add(ABName, bundle);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            bundle = ABBundles[ABName];</span><br><span class="line">        <span class="built_in">string</span>[] strs=ABManifest.GetAllDependencies(bundle.name);</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> strs)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(!ABBundles.ContainsKey(a))</span><br><span class="line">            &#123;</span><br><span class="line">                AssetBundle b = AssetBundle.LoadFromFile(PATH + ABName);</span><br><span class="line">                ABBundles.Add(a, b);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (bundle == <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> System.Exception(<span class="string">&quot;AB包加载失败&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> bundle;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 指定类型同步加载资源</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;assetName&quot;&gt;</span>资源名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;type&quot;&gt;</span>类型<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span>返回Object<span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">loadAsset</span>(<span class="params"><span class="built_in">string</span> ABName,<span class="built_in">string</span> assetName,System.Type type</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        LoadAB(ABName);</span><br><span class="line">        <span class="keyword">return</span> ABBundles[ABName].LoadAsset(assetName,type);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 泛型加载资源</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;typeparam name=&quot;T&quot;&gt;</span>类型<span class="doctag">&lt;/typeparam&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;assetName&quot;&gt;</span>资源名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">loadAsset</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> ABName, <span class="built_in">string</span> assetName</span>) <span class="keyword">where</span> T : Object</span></span><br><span class="line">    &#123;</span><br><span class="line">        LoadAB(ABName);</span><br><span class="line">        <span class="keyword">return</span> ABBundles[ABName].LoadAsset&lt;T&gt;(assetName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 异步指定类型加载资源，加载完成后执行委托</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;assetName&quot;&gt;</span>资源名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;type&quot;&gt;</span>类型<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;action&quot;&gt;</span>加载完成后要执行的委托<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">LoadAssetAsync</span>(<span class="params"><span class="built_in">string</span> ABName,<span class="built_in">string</span> assetName,System.Type type,System.Action&lt;AsyncOperation&gt; action = <span class="literal">null</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        LoadAB(ABName);</span><br><span class="line">        AssetBundleRequest assetBundleRequest= ABBundles[ABName].LoadAssetAsync(assetName,type);</span><br><span class="line">        assetBundleRequest.completed += action;</span><br><span class="line">        <span class="keyword">return</span> assetBundleRequest.asset;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 异步泛型加载资源，加载完成后执行委托</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;typeparam name=&quot;T&quot;&gt;</span>泛型参数<span class="doctag">&lt;/typeparam&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;assetName&quot;&gt;</span>资源名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;action&quot;&gt;</span>加载完成后要执行的委托<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">LoadAssetAsync</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> ABName, <span class="built_in">string</span> assetName,System.Action&lt;AsyncOperation&gt; action=<span class="literal">null</span></span>) <span class="keyword">where</span> T : Object</span></span><br><span class="line">    &#123;</span><br><span class="line">        LoadAB(ABName);</span><br><span class="line">        AssetBundleRequest assetBundleRequest = ABBundles[ABName].LoadAssetAsync&lt;T&gt;(assetName);</span><br><span class="line">        assetBundleRequest.completed += action;</span><br><span class="line">        <span class="keyword">return</span> assetBundleRequest.asset <span class="keyword">as</span> T;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 基于Unitask，指定类型加载资源，加载完成后执行委托</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;assetName&quot;&gt;</span>资源名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;type&quot;&gt;</span>类型<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;action&quot;&gt;</span>委托函数<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> UniTask&lt;Object&gt; <span class="title">LoadAssetAsyncByUnitask</span>(<span class="params"><span class="built_in">string</span> ABName, <span class="built_in">string</span> assetName, System.Type type, UnityAction&lt;Object&gt; action = <span class="literal">null</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        LoadAB(ABName);</span><br><span class="line">        Object obj= <span class="keyword">await</span> ABBundles[ABName].LoadAssetAsync(assetName, type);</span><br><span class="line">        action(obj);</span><br><span class="line">        <span class="keyword">return</span> obj ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 基于Unitask,泛型加载资源,加载完成后执行委托</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;typeparam name=&quot;T&quot;&gt;</span>泛型参数<span class="doctag">&lt;/typeparam&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;ABName&quot;&gt;</span>包名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;assetName&quot;&gt;</span>资源名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;action&quot;&gt;</span>委托<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> <span class="title">UniTask</span>&lt;<span class="title">T</span>&gt; <span class="title">LoadAssetAsyncByUnitask</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> ABName, <span class="built_in">string</span> assetName, UnityAction&lt;T&gt; action=<span class="literal">null</span></span>) <span class="keyword">where</span> T:Object</span></span><br><span class="line">    &#123;</span><br><span class="line">        LoadAB(ABName);</span><br><span class="line">        T obj =  <span class="keyword">await</span> ABBundles[ABName].LoadAssetAsync&lt;T&gt;(assetName) <span class="keyword">as</span> T ;</span><br><span class="line">        action(obj);</span><br><span class="line">        <span class="keyword">return</span> obj ;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>简单测试如下：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">async</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">&#123;   </span><br><span class="line">    <span class="keyword">await</span> ABMgr.Instance.LoadAssetAsyncByUnitask&lt;GameObject&gt;(<span class="string">&quot;cube&quot;</span>, <span class="string">&quot;cube&quot;</span>, (a) =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Instantiate(a);</span><br><span class="line">    &#125;);</span><br><span class="line">    GameObject A = ABMgr.Instance.loadAsset(<span class="string">&quot;cube&quot;</span>, <span class="string">&quot;cube&quot;</span>, <span class="keyword">typeof</span>(GameObject)) <span class="keyword">as</span> GameObject;</span><br><span class="line">    Instantiate(A);</span><br></pre></td></tr></table></figure>
+<p><img src="/images%5Cabbundle.gif" alt="abbundle"></p>
+<p>正常</p>
+<p>完。。。。。<img src="/images%5CQQ%E6%88%AA%E5%9B%BE20201118223557.png" alt="QQ截图20201118223557"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2022/10/28/AssetBundle/">https://cjforeal.github.io/2022/10/28/AssetBundle/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/lua/"># lua</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/10/28/Lua%E7%83%AD%E6%9B%B4%E6%96%B0%E5%AD%A6%E4%B9%A0/">Lua热更新学习</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>

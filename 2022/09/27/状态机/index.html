@@ -265,7 +265,7 @@
 <p>优点：一定程度上缓解了冗余感，将处理不同状态的代码聚合在了一起，直观就是看起来舒服，写起来更加明了。</p>
 <p>缺点：处理逻辑的效果有限，没有真正的抽象化。</p>
 <p>因此，<strong>Here comes THE FSM</strong></p>
-<h3 id="有限状态机"><a href="#有限状态机" class="headerlink" title="有限状态机"></a>有限状态机</h3><p><img src="/images/FSM" alt="图1"></p>
+<h3 id="有限状态机"><a href="#有限状态机" class="headerlink" title="有限状态机"></a>有限状态机</h3><p><img src="/images/FSM.png" alt="图1"></p>
 <p>最简单FSM实现，首先定义一状态接口，每一个状态都要实现其接口,</p>
 <p><em><strong>伪代码</strong></em></p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IState</span></span><br><span class="line">&#123;       </span><br><span class="line">    <span class="built_in">int</span> StateID &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="built_in">string</span> StateName &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">OnStateEnter</span>()</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">OnStateUpdate</span>()</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">OnStateExit</span>()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
