@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>Opengl学习总结(学到哪总结到哪) | Cjforeal(鼻屎拌饭)</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Opengl学习总结(学到哪总结到哪)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十月 10, 2022&nbsp;&nbsp;10:41:58</a>
+                        </span>
+                    
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">4.4k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">17min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="学习目的"><a href="#学习目的" class="headerlink" title="学习目的"></a>学习目的</h3><p>为了搭配Games101课程实践，以及了解进一步底层的游戏制作，再以及重新熟悉c++（忘得差不多了）；</p>
+<p>目标是  Github上的 我的世界一周挑战赛。</p>
+<p>学习自</p>
+<p>[OpenGL - LearnOpenGL CN (learnopengl-cn.github.io)](<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/01">https://learnopengl-cn.github.io/01</a> Getting started&#x2F;01 OpenGL&#x2F;)</p>
+<p>Opengl编程指南第八版</p>
+<h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p>网上教程挺多的，我偷懒全是在Visual Studio Nuget程序包安装的</p>
+<p>另外在这里科普一下glad、glew、glfw、Freeglut的区别：</p>
+<p>glew（The OpenGL Extension Wrangler Library）是对底层OpenGL接口的封装，可以让你的代码跨平台。</p>
+<p>glad与glew作用相同，可以看作它的升级版。</p>
+<p>Freeglut（OpenGL Utility Toolkit）主要用于创建OpenGL上下文、接收一些鼠标键盘事件等等。</p>
+<p>glfw（Graphics Library Framework）是Freeglut升级版，作用基本一样。</p>
+<p>本人用的是Glad加Glfw的组合。</p>
+<p>引用自</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/264132001/answer/729626917">https://www.zhihu.com/question/264132001/answer/729626917</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ikkR3uqqnwSdzAknfO23FQ">freeglut与GLFW介绍及其不同 (qq.com)</a></p>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><p>[简介](<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/01">https://learnopengl-cn.github.io/01</a> Getting started&#x2F;01 OpenGL&#x2F;)</p>
+<p>这里截取一些关键信息：</p>
+<ul>
+<li><p><strong>Opengl的渲染管线</strong></p>
+<p>Opengl首先接收用户提供的集合数据（顶点和几何图元），然后将它输入到一系列着色器阶段中进行处理，包括：顶点着色，细分着色，图元装配，几何着色，然后他将被送入光栅化单元。光栅化单元负责对所有剪切区域内的图元生成片元数据，然后对每一个生成的片元都执行一个片元着色器。</p>
+<p>顶点着色器和片元着色器是必需的，细分和几何着色器可选。</p>
+<p>着色器语言为GlSL(OpenGL Shading Language).</p>
+<p><img src="/images%5Copengl%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF.png" alt="opengl渲染管线"></p>
+</li>
+<li><p><strong>状态机</strong></p>
+<p>OpenGL自身是一个巨大的状态机：一系列的变量描述OpenGL此刻应当如何运行。通过改变上下文变量来改变Opengl状态，状态机同一时间只允许一个状态存在，opengl也是如此，它只允许一个当前对象。</p>
+<p>例如通过使用状态设置函数，改变状态变量等</p>
+</li>
+<li><p><strong>Context上下文</strong></p>
+<p>看文档时经常看到这样一个概念，可以理解为状态机的一个状态。（所以为什么要翻译成这样）</p>
+</li>
+<li><p><strong>对象</strong> </p>
+<p>虽然opengl是用c语言写的，但为了更加高效和兼容到高级语言，引用了对象的概念；</p>
+</li>
+<li><p><strong>基本工作流</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> objectId = <span class="number">0</span>;</span><br><span class="line"><span class="comment">//分配对象</span></span><br><span class="line"><span class="built_in">glGenObject</span>(<span class="number">1</span>, &amp;objectId);</span><br><span class="line"><span class="comment">// 绑定对象至上下文</span></span><br><span class="line"><span class="built_in">glBindObject</span>(GL_WINDOW_TARGET, objectId);</span><br><span class="line"><span class="comment">// 设置当前绑定到 GL_WINDOW_TARGET 的对象的一些选项</span></span><br><span class="line"><span class="built_in">glSetObjectOption</span>(GL_WINDOW_TARGET, GL_OPTION_WINDOW_WIDTH, <span class="number">800</span>);</span><br><span class="line"><span class="built_in">glSetObjectOption</span>(GL_WINDOW_TARGET, GL_OPTION_WINDOW_HEIGHT, <span class="number">600</span>);</span><br><span class="line"><span class="comment">// 将上下文对象设回默认</span></span><br><span class="line"><span class="built_in">glBindObject</span>(GL_WINDOW_TARGET, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>函数</p>
+<p>例如<code>glGenObject() </code>开头“gl”是其命名规则，代表Opengl库函数，GenObject 即 generate object  分配对象的作用， 函数作用顾名思义即可知道是啥意思了。</p>
+</li>
+<li><p>数据处理</p>
+<p>Opengl需要将所有的数据都保存到缓存对象(buffer object)中，缓存对象就是Opengl维护的以一块内存区域，它位于显卡中，而不是内存条中，因为访问显存比访问内存快得多，分配对象后要记得绑定对象到上下文目标位置，再通过目标位置来设置对象，解绑后 对象的设置将会保留在内存中。</p>
+<p>总结就是三步走  第一，创建对象 ，第二，绑定对象到上下文，第三 设置对象。</p>
+<p>比如说上面的代码，但这次创建了、并设置了两个对象，在解绑状态下， 分别绑定这两个状态就会呈现其该两状态原本的设置。</p>
+</li>
+</ul>
+</li>
+<li><p>支持的数据类型</p>
+<p><img src="/images%5COpengl%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png" alt="Opengl数据类型"></p>
+</li>
+</ul>
+<h3 id="创建窗口"><a href="#创建窗口" class="headerlink" title="创建窗口"></a>创建窗口</h3><p>Glfw官方配置窗口指南：<a target="_blank" rel="noopener" href="http://www.glfw.org/docs/latest/window_guide.html">GLFW: Window Guide</a></p>
+<p>直接面向过程创建</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glad/glad.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;GLFW/glfw3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::endl;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;	</span><br><span class="line">	<span class="comment">//初始化glfw</span></span><br><span class="line">	<span class="built_in">glfwInit</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> region 配置Glfw</span></span><br><span class="line">	<span class="comment">//配置主版本</span></span><br><span class="line">	<span class="built_in">glfwWindowHint</span>(GLFW_CONTEXT_VERSION_MAJOR, <span class="number">3</span>);</span><br><span class="line">	<span class="comment">//配置副版本</span></span><br><span class="line">	<span class="built_in">glfwWindowHint</span>(GLFW_CONTEXT_VERSION_MINOR, <span class="number">3</span>);</span><br><span class="line">	<span class="comment">//配置Glfw的渲染模式为核心模式</span></span><br><span class="line">	<span class="built_in">glfwWindowHint</span>(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> endregion</span></span><br><span class="line">	GLFWwindow* window = <span class="built_in">glfwCreateWindow</span>(<span class="number">800</span>, <span class="number">600</span>, <span class="string">&quot;Winodw&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (window == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;创建失败&quot;</span> &lt;&lt; endl;</span><br><span class="line">		<span class="comment">//终止Glfw</span></span><br><span class="line">		<span class="built_in">glfwTerminate</span>();</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//在指定窗口展示上下文</span></span><br><span class="line">	<span class="built_in">glfwMakeContextCurrent</span>(window);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行看到窗口被成功创建。</p>
+<p>以及持续打开窗口：</p>
+<p>注意点</p>
+<ul>
+<li><p><code>glViewport(int,int,int,int)</code>  </p>
+<p>Opengl使用该函数进行Opengl内部坐标到屏幕2D坐标的映射(opengl坐标范围为-1~1)</p>
+<p>也就是说，每当窗口大小改变时，就需要重新映射一次，因此得在主循环在持续调用，Glfw库函数有<code>glfwSetFramebufferSizeCallback(GLFWwindow*, GlfwFramebufferSizefun)</code>用来注册视口坐标映射的回调函数。</p>
+<p>主循环里调用<code>glfwPollEvents()</code>来响应所有的回调函数（内部用了事件队列来保存所有事件）</p>
+</li>
+<li><p><code>glfwSwapBuffers(window)</code></p>
+<p>该函数用来交换前缓存和后缓存。</p>
+<p>要知道 屏幕图像的显示是按照从左到右，由上而下逐像素地绘制而成的，如果这样以一种撕裂感展现给用户，简直视觉灾难，所以使用双缓冲模式，前缓冲保存着最终输出的图像，它会在屏幕上显示；而所有的的渲染指令都会在<strong>后</strong>缓冲上绘制，当渲染指令执行完毕后，我们交换前缓冲和后缓冲，这样整个图像就立即呈显出来了。</p>
+</li>
+<li><p><code>gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)</code> 获取当前上下文从而初始化Glad，如果当前opengl还没启动上下文则会报错，所以在下面代码里要确保在<code>glfwMakeContextCurrent(window)</code>后调用</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glad/glad.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;GLFW/glfw3.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="comment">// Settings</span></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::endl;</span><br><span class="line"><span class="keyword">using</span> std::cin;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> WIDTH = <span class="number">800</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> HEIGHT = <span class="number">600</span>;</span><br><span class="line">GLFWwindow* window;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Function Declaration</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">FrameBufferSizeCallback</span><span class="params">(GLFWwindow*, <span class="type">int</span>, <span class="type">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> region 使用opengl库函数保持窗口打开</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;	</span><br><span class="line">	<span class="built_in">glfwInit</span>();</span><br><span class="line">	<span class="built_in">glfwWindowHint</span>(GLFW_CONTEXT_VERSION_MAJOR, <span class="number">3</span>);</span><br><span class="line">	<span class="built_in">glfwWindowHint</span>(GLFW_CONTEXT_VERSION_MINOR, <span class="number">3</span>);</span><br><span class="line">	<span class="built_in">glfwWindowHint</span>(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);</span><br><span class="line">	window = <span class="built_in">glfwCreateWindow</span>(<span class="number">800</span>, <span class="number">600</span>, <span class="string">&quot;Winodw&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (window == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;创建失败&quot;</span> &lt;&lt; endl;</span><br><span class="line">		<span class="built_in">glfwTerminate</span>();</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">glfwMakeContextCurrent</span>(window);</span><br><span class="line">    </span><br><span class="line">	<span class="comment">//注册回调函数，窗口大小改变，视口映射也要改变</span></span><br><span class="line">	<span class="built_in">glfwSetFramebufferSizeCallback</span>(window, FrameBufferSizeCallback);</span><br><span class="line">	</span><br><span class="line">    ###################</span><br><span class="line">	<span class="comment">//初始化Glad</span></span><br><span class="line">	<span class="keyword">if</span> (!<span class="built_in">gladLoadGLLoader</span>((GLADloadproc)glfwGetProcAddress))</span><br><span class="line">	&#123;</span><br><span class="line">		cout &lt;&lt; <span class="string">&quot;Glad初始化失败&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">glViewport</span>(<span class="number">0</span>, <span class="number">0</span>, WIDTH, HEIGHT);	</span><br><span class="line">    ###################<span class="meta">#</span></span><br><span class="line"><span class="meta">    </span></span><br><span class="line"><span class="meta">	while (!glfwWindowShouldClose(window))</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">glfwSwapBuffers</span>(window);</span><br><span class="line">		<span class="built_in">glfwPollEvents</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">glfwTerminate</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> endregion</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> region 函数定义</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">FrameBufferSizeCallback</span><span class="params">(GLFWwindow* window, <span class="type">int</span> width, <span class="type">int</span> height)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">glViewport</span>(<span class="number">0</span>,<span class="number">0</span>,width,height);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> endregion</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建三角形"><a href="#创建三角形" class="headerlink" title="创建三角形"></a>创建三角形</h3><h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><p>创建三角形，就必须要传入坐标数据，Opengl是3D图形库，所有坐标都是3D,(x,y)为平面坐标，z为深度值，并且要符合标准化设备坐标范围（-1~1）。</p>
+<p><strong>而传入一系列的顶点数据，则需要分配缓存对象并保存到缓存对象中，并且由当前绑定的顶点数组对象管理。</strong></p>
+<p>(缓存对象是什么？上文基本工作流中提到过)</p>
+<p>所以假如有下面一系列三角形顶点数据</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">	<span class="comment">// positions        </span></span><br><span class="line">	 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">	<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">	 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>第一步 分配缓存对象</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明对象名称,分配缓存对象</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> buffer[n];</span><br><span class="line"><span class="built_in">glGenBuffers</span>(<span class="number">1</span>, &amp;buffer);</span><br><span class="line"></span><br><span class="line">############<span class="meta">#</span></span><br><span class="line"><span class="meta">void glGenBuffers(Glsizei n, Gluint *buffers)</span></span><br><span class="line">    </span><br><span class="line">返回n个当前未使用的缓存对象名称，并保存到buffers中</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二步，绑定对象到上下文目标位置，我们要的是顶点缓冲对象，Opengl将其缓冲类型定义为<code>GL_ARRAY_BUFFER</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);</span><br><span class="line"></span><br><span class="line">#############<span class="meta">#</span></span><br><span class="line"><span class="meta">void glBindBuffer(Glenum target, GLuint buffer)</span></span><br><span class="line">    </span><br><span class="line">targer 指定当前激活的缓存对象类型，其包括(要用再看)：</span><br><span class="line"><span class="number">1.</span>GL_ARRAY BUFFER                      顶点属性数据</span><br><span class="line"><span class="number">2.</span>GL-ELEMENT_ARRAY_BUFFER			   索引数据类型</span><br><span class="line"><span class="number">3.</span>GL_PIXEL_UNPACK_BUFFER			   Opengl的像素数据</span><br><span class="line"><span class="number">4.</span>GL_PIXEL_PACK_BUFFER				   从OpenGL中获取的像素数据</span><br><span class="line"><span class="number">5.</span>GL_COPY_READ_BUFFER				   缓存之间复制的数据</span><br><span class="line"><span class="number">6.</span>GL_COPY_WRITE_BUFFER				   缓存之间复制的数据</span><br><span class="line"><span class="number">7.</span>GL_TEXTURE_BUFFER					   纹理数据</span><br><span class="line"><span class="number">8.</span>GL_TRANSFORM_FEEDBACK_BUFFER         transform feedback着色器获得的结果</span><br><span class="line"><span class="number">9.</span>GL_UNIFORM_BUFFER					   一致变量</span><br><span class="line">buffer 缓存对象名称</span><br><span class="line">该函数完成了三项工作</span><br><span class="line"><span class="number">1</span>) 如果是第一次绑定buffer，且他是一个非零的无符号整型，那么将创建一个与该名称相对应的新缓存对象</span><br><span class="line"><span class="number">2</span>) 如果绑定到一个已经创建的缓存对象，那么它将成为当前被激活的缓存对象</span><br><span class="line"><span class="number">3</span>) 如果绑定的buffer值为<span class="number">0</span>，则OpenGL将不再对当前target应用任何缓存对象。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三步就是要给当前绑定的缓冲对象传入数据了，对于顶点数据，我们可以调用<code>glBufferData</code>函数把顶点数据复制到对象的内存中</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glBufferData</span>(GL_ARRAY_BUFFER, <span class="built_in">sizeof</span>(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line"></span><br><span class="line">###############################<span class="meta">#</span></span><br><span class="line"><span class="meta">void glBufferData(GLenum target,GLsizeiptr size,const GLvoid* data,GLenum usage)</span></span><br><span class="line">在OpenGL内存中分配size个存储单元(单位通常为Byte),用于存储数据或者索引。如果当前绑定的对象已经存在了关联的数据，那么会首先删除这些数据</span><br></pre></td></tr></table></figure>
+
+<p>至此对VBO的操作以及结束</p>
+</li>
+<li><p>设置顶点属性</p>
+<p>这一步是为了告诉Opengl如何解析VBO管理的数据。</p>
+<p><img src="/images%5Cimage-20221101221331879.png" alt="image-20221101221331879"></p>
+<p>具体如何设置得看我们的顶点数据结构，例如</p>
+<p>我们传入的顶点数据只包含位置信息，且</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">		<span class="comment">// positions        </span></span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">	&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>下图其在VBO中的结构图</p>
+<p><img src="C:\Users\86187\myBlog\source\images\image-20221101230718828.png" alt="image-20221101230718828"></p>
+<p>参数一location取决于着色器的标识</p>
+<p>参数二我们这里一次读入三个float，大小为3，</p>
+<p>参数三类型为float，所以传入GL_FLOAT</p>
+<p>参数四：从起始读入数据开始，加上起始读入数据还需读入三个float数据，就是下一组读入数据；所以传入3个float字节大小</p>
+<p>参数五：即起始读入数据离数组开头的距离，这里为0，所以输入(void*)0</p>
+</li>
+<li><p>VAO</p>
+<p>同下</p>
+<p>……</p>
+</li>
+</ol>
+<h4 id="VBO-的理解"><a href="#VBO-的理解" class="headerlink" title="VBO 的理解"></a>VBO 的理解</h4><blockquote>
+<p>这两步刚看的时候究极究极究极懵懂，以至于不弄得清楚的话我感觉我自己将不可能学会</p>
+</blockquote>
+<p><strong>我们将顶点缓存对象（VBO）理解为一个指针变量，它是位于OpenGL维护的内存区域中(显存)的一块内存，管理着一组顶点数据。</strong></p>
+<p><strong>最主要的作用：</strong></p>
+<p><strong>CPU传送数据给GPU比较耗费时间，通过VBO可以尽可能的一次性把需要的顶点数据全部传给GPU，这样顶点着色器几乎能立即访问到顶点，有助于加快顶点着色器效率。</strong></p>
+<p><strong>看书以及各种博客后对内部结构的个人理解</strong>：</p>
+<p>**在调用<code>glGenBuffers(Glsizei n, Gluint *buffers)</code>时，就相当于我们声明了OpenGL所维护的内存区域内的一个指针，我们在之前声明的<code>unsigned int buffer</code>只不过是该指针的标识。**这个代称目的是为了我们可以把数据从主存传到显存而存在的，因为我们无法直接操作显存里的对象。</p>
+<p><strong>而当我们第一次绑定它时，即调用<code>glBindBuffer(Glenum target, GLuint buffer)</code>时,OpenGL内部会分配该缓存对象所需的内存并且将它作为当前对象，所有后续的操作都会作用与这个被绑定的对象，也就是说，<code>buffer</code>对象被设为绑定类型的默认对象，以后我们对对象类型<code>target</code>目标位置上的操作都会用来配置默认对象。</strong>(我们实际上操作的是缓冲类型,Opengl内部通过我们对缓冲类型的配置来配置位于该缓冲类型位置下的缓冲对象)；	</p>
+<p><em>编程指南里提到：总体上说，在两种情况下我们需要绑定一个对象：创建对象并初始化它所对应的数据时；以及每次我们准备使用这个对象，但它不是当前绑定的对象时。</em></p>
+<hr>
+<h4 id="VAO的理解"><a href="#VAO的理解" class="headerlink" title="VAO的理解"></a>VAO的理解</h4><blockquote>
+<p>对顶点数据的分配工作已经结束，然后就蹦出来了个VAO</p>
+</blockquote>
+<p>VAO作用:</p>
+<ol>
+<li><p>不同于VBO管理数据，VAO旨在解析数据</p>
+<p>一堆数据也许包含着位置，颜色等不同的关键信息，通过VAO将帮助Opengl解释数据。</p>
+</li>
+<li><p>复用顶点属性，节省工作量</p>
+<p>当我们在初始化并绑定顶点数组对象后进行顶点属性设置时，他会保存该顶点属性配置，其包括</p>
+<ul>
+<li><code>glEnable(Disable)VertexAttribArray</code>顶点属性启用与否</li>
+<li>通过<code>glVertexAttribPointer</code>设置的顶点属性配置。</li>
+<li>通过<code>glVertexAttribPointer</code>调用与顶点属性关联的顶点缓冲对象。</li>
+</ul>
+<p>所以当我们绘制图形时，就不需要每次都重复的链接顶点属性，如果当前绑定的顶点数组对象得顶点属性是符合绘制图形时，我们就直接绘制即可，否则绑定对应得VBO，然后再绘制，绘制后根据下一个绘制图形的顶点属性来选择受否解绑当前VAO。这和绑定VBO道理时相通的</p>
+</li>
+</ol>
+<h4 id="EBO"><a href="#EBO" class="headerlink" title="EBO"></a>EBO</h4><p>易理解 看这个就好[你好，三角形 - LearnOpenGL CN (learnopengl-cn.github.io)](<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/01">https://learnopengl-cn.github.io/01</a> Getting started&#x2F;04 Hello Triangle&#x2F;)</p>
+<h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//井号内是对着色器的简单使用</span></span><br><span class="line">####################################################################################<span class="meta">#</span></span><br><span class="line"><span class="meta">	const char* vertexShaderSource = <span class="string">&quot;#version 330 core\n&quot;</span></span></span><br><span class="line">		<span class="string">&quot;layout (location = 0) in vec3 aPos;\n&quot;</span></span><br><span class="line">		<span class="string">&quot;out vec4 vertexColor;\n&quot;</span></span><br><span class="line">		<span class="string">&quot;void main()\n&quot;</span></span><br><span class="line">		<span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line">		<span class="string">&quot;   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n&quot;</span></span><br><span class="line">		<span class="string">&quot;   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n&quot;</span></span><br><span class="line">		<span class="string">&quot;&#125;\0&quot;</span>;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> vertexShader;</span><br><span class="line">	vertexShader = <span class="built_in">glCreateShader</span>(GL_VERTEX_SHADER);</span><br><span class="line">	<span class="built_in">glShaderSource</span>(vertexShader, <span class="number">1</span>, &amp;vertexShaderSource, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="built_in">glCompileShader</span>(vertexShader);</span><br><span class="line"></span><br><span class="line">	<span class="type">const</span> <span class="type">char</span>* fragmentShaderSource = <span class="string">&quot;#version 330 core\n&quot;</span></span><br><span class="line">		<span class="string">&quot;out vec4 FragColor;\n&quot;</span>		</span><br><span class="line">		<span class="string">&quot;uniform vec4 ourColor;\n&quot;</span></span><br><span class="line">		<span class="string">&quot;void main()\n&quot;</span></span><br><span class="line">		<span class="string">&quot;&#123;\n&quot;</span></span><br><span class="line">		<span class="string">&quot;   FragColor = ourColor;\n&quot;</span></span><br><span class="line">		<span class="string">&quot;&#125;\0&quot;</span>;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> fragmentShader;</span><br><span class="line">	fragmentShader = <span class="built_in">glCreateShader</span>(GL_FRAGMENT_SHADER);</span><br><span class="line">	<span class="built_in">glShaderSource</span>(fragmentShader, <span class="number">1</span>, &amp;fragmentShaderSource, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="built_in">glCompileShader</span>(fragmentShader);</span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> shaderProgram;</span><br><span class="line">	shaderProgram = <span class="built_in">glCreateProgram</span>();</span><br><span class="line">	<span class="built_in">glAttachShader</span>(shaderProgram, vertexShader);</span><br><span class="line">	<span class="built_in">glAttachShader</span>(shaderProgram, fragmentShader);</span><br><span class="line">	<span class="built_in">glLinkProgram</span>(shaderProgram);</span><br><span class="line">####################################################################################<span class="meta">#</span></span><br><span class="line"><span class="meta">	float vertices[] = &#123;</span></span><br><span class="line">        <span class="comment">// positions        </span></span><br><span class="line">         <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  </span><br><span class="line">        <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,   </span><br><span class="line">         <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,   </span><br><span class="line">		 <span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span></span><br><span class="line">    &#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> region 元素缓存/索引缓冲对象</span></span><br><span class="line"></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> indices[] = &#123;</span><br><span class="line">		<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,</span><br><span class="line">		<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> EBO;</span><br><span class="line">	<span class="built_in">glGenBuffers</span>(<span class="number">1</span>, &amp;EBO);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> endregion</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">////配置顶点属性</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> VBO, VAO;</span><br><span class="line">	<span class="built_in">glGenVertexArrays</span>(<span class="number">1</span>, &amp;VAO);</span><br><span class="line">	<span class="built_in">glBindVertexArray</span>(VAO);</span><br><span class="line">	<span class="built_in">glGenBuffers</span>(<span class="number">1</span>, &amp;VBO);</span><br><span class="line">	<span class="built_in">glBindBuffer</span>(GL_ARRAY_BUFFER, VBO);</span><br><span class="line">	<span class="built_in">glBufferData</span>(GL_ARRAY_BUFFER, <span class="built_in">sizeof</span>(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">glBindBuffer</span>(GL_ELEMENT_ARRAY_BUFFER, EBO);</span><br><span class="line">	<span class="built_in">glBufferData</span>(GL_ELEMENT_ARRAY_BUFFER, <span class="built_in">sizeof</span>(indices), indices, GL_STATIC_DRAW);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// position attribute</span></span><br><span class="line">   	<span class="built_in">glVertexAttribPointer</span>(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">3</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>), (<span class="type">void</span>*)<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">glEnableVertexAttribArray</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">		</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// render loop</span></span><br><span class="line">	<span class="comment">// -----------</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (!<span class="built_in">glfwWindowShouldClose</span>(window))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// 输入</span></span><br><span class="line">		<span class="built_in">processInput</span>(window);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 渲染</span></span><br><span class="line">		<span class="comment">// 清除颜色缓冲</span></span><br><span class="line">		<span class="built_in">glClearColor</span>(<span class="number">0.2f</span>, <span class="number">0.3f</span>, <span class="number">0.3f</span>, <span class="number">1.0f</span>);</span><br><span class="line">		<span class="built_in">glClear</span>(GL_COLOR_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);</span></span><br><span class="line">		<span class="comment">// render the triangle</span></span><br><span class="line">        	<span class="comment">//ourShader.use();</span></span><br><span class="line">			<span class="built_in">glUseProgram</span>(shaderProgram);</span><br><span class="line"></span><br><span class="line">			<span class="type">float</span> timeValue = <span class="built_in">glfwGetTime</span>();</span><br><span class="line">			<span class="type">float</span> redValue = <span class="built_in">cos</span>(timeValue) / <span class="number">2.0f</span>+<span class="number">0.5f</span>;</span><br><span class="line">			<span class="type">float</span> greenValue = <span class="built_in">sin</span>(timeValue) / <span class="number">2.0f</span>+<span class="number">0.5f</span> ;</span><br><span class="line">			<span class="comment">//float blueValue = sin(timeValue) / 2.0f + 0.5f;</span></span><br><span class="line">			<span class="type">int</span> vertexColorLocation = <span class="built_in">glGetUniformLocation</span>(shaderProgram, <span class="string">&quot;ourColor&quot;</span>);</span><br><span class="line">			<span class="built_in">glUniform4f</span>(vertexColorLocation, redValue, greenValue, <span class="number">0</span>, <span class="number">1.0f</span>);</span><br><span class="line"></span><br><span class="line">        	<span class="built_in">glBindVertexArray</span>(VAO);</span><br><span class="line">        	<span class="comment">//glDrawArrays(GL_TRIANGLES, 0, 3);</span></span><br><span class="line">			<span class="built_in">glDrawElements</span>(GL_TRIANGLES, <span class="number">6</span>, GL_UNSIGNED_INT, <span class="number">0</span>);</span><br><span class="line">			<span class="built_in">glBindVertexArray</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 交换缓冲并查询IO事件</span></span><br><span class="line">		<span class="built_in">glfwSwapBuffers</span>(window);</span><br><span class="line">		<span class="built_in">glfwPollEvents</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">glDeleteVertexArrays</span>(<span class="number">1</span>, &amp;VAO);</span><br><span class="line">	<span class="built_in">glDeleteBuffers</span>(<span class="number">1</span>, &amp;VBO);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">glfwTerminate</span>();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">processInput</span><span class="params">(GLFWwindow* window)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">glfwGetKey</span>(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)</span><br><span class="line">		<span class="built_in">glfwSetWindowShouldClose</span>(window, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">framebuffer_size_callback</span><span class="params">(GLFWwindow* window, <span class="type">int</span> width, <span class="type">int</span> height)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">glViewport</span>(<span class="number">0</span>, <span class="number">0</span>, width, height);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="着色器的初步使用"><a href="#着色器的初步使用" class="headerlink" title="着色器的初步使用"></a>着色器的初步使用</h3><h4 id="初步瞅瞅GLSL"><a href="#初步瞅瞅GLSL" class="headerlink" title="初步瞅瞅GLSL"></a>初步瞅瞅GLSL</h4><p>语法就不干学了，多用多写再多出错学得更好</p>
+<p>简单看一段顶点着色器代码，语言为Glsl</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">0</span>) in vec3 aPos;   </span><br><span class="line"><span class="built_in">layout</span> (location = <span class="number">1</span>) in vec3 aColor; </span><br><span class="line"></span><br><span class="line">out vec3 ourColor; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gl_Position = <span class="built_in">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">    ourColor = aColor; <span class="comment">// 将ourColor设置为我们从顶点数据那里得到的输入颜色</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>版本，</p>
+<p>声明输入变量，</p>
+<p>声明输出变量，</p>
+<p>主函数</p>
+<p>{</p>
+<p>处理输入变量，将结果输出</p>
+<p>}</p>
+<ul>
+<li><code>(location = 0)</code>为设置顶点属性时<code>glVertexAttribPointer</code> 参数一</li>
+<li>着色器之间若需要数据的传递，则着色器输入变量的类型和变量名要与上一个着色器的对应的输出变量相同，这样就能识别。</li>
+<li>给着色器输入数据也可以通过全局变量来获得<ul>
+<li>首先<code>int glGetUniformLocation(shaderProgram, &quot;ourColor&quot;)</code>通过传入渲染程序和全局变量字段名参数来获取全局变量位置，</li>
+<li>再通过<code>glUniform(int pos)</code> 传入全局变量位置，来设置全局变量值</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>Glsl包含:</p>
+<p><img src="/images%5CGLSL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png" alt="GLSL数据类型"></p>
+<h4 id="写入渲染程序"><a href="#写入渲染程序" class="headerlink" title="写入渲染程序"></a>写入渲染程序</h4><p>流程如下：</p>
+<p><img src="/images%5C%E7%9D%80%E8%89%B2%E5%99%A8%E7%BC%96%E8%AF%91%E9%A1%BA%E5%BA%8F.png" alt="着色器编译顺序"></p>
+<ul>
+<li><p>创建着色器对象</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">GLuint <span class="title">glCreateShader</span><span class="params">(Glenum type)</span></span></span><br><span class="line"><span class="function">分配一个着色器对象，成功则返回一个非零值</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将着色器源代码编译为对象</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ShaderSource</span><span class="params">(Gluint,Glsizei,<span class="type">const</span> GLchar**,<span class="type">const</span> GLint*)</span></span></span><br><span class="line"><span class="function">将着色器源代码关联到指定着色器对象上</span></span><br><span class="line"><span class="function"> 参数分别为 着色器对象，代码的字符串数组行数，代码字符串数组，</span></span><br><span class="line"><span class="function">-------</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">glCoompileShader</span><span class="params">(GLuint shader)</span></span>;</span><br><span class="line">编译着色器对象</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证着色器编译是否成功</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">glGetShaderiv</span><span class="params">(GLuint, GL_COMPILE_STATUS, <span class="type">bool</span>*)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">glGetShaderInfoLog</span><span class="params">(GLuint,GLsizei,GLsizei*,<span class="type">char</span>*)</span></span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>至此着色器对象的准备工作完成，接下来需要将多个着色器对象链接为一个着色器程序</p>
+<ul>
+<li><p>创建程序</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">GLuint <span class="title">glCreateProgram</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关联着色器对象</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glAttachShader</span>(program, shader_int);</span><br><span class="line">移除</span><br><span class="line">glDetachShader...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成完整着色器程序</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">glLinkProgram</span>(program);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取日志</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打印连接错误（如果有的话）</span></span><br><span class="line"><span class="built_in">glGetProgramiv</span>(ID, GL_LINK_STATUS, &amp;success);</span><br><span class="line"><span class="keyword">if</span>(!success)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">glGetProgramInfoLog</span>(ID, <span class="number">512</span>, <span class="literal">NULL</span>, infoLog);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>绑定着色器程序</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">glUseProgram</span><span class="params">(Gluint program)</span></span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 声明着色器标识（顶点，片段）</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> vertex, fragment;</span><br><span class="line"><span class="type">int</span> success;</span><br><span class="line"><span class="type">char</span> infoLog[<span class="number">512</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建顶点着色器</span></span><br><span class="line">vertex = <span class="built_in">glCreateShader</span>(GL_VERTEX_SHADER);</span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="built_in">glShaderSource</span>(vertex, <span class="number">1</span>, &amp;vShaderCode, <span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">glCompileShader</span>(vertex);</span><br><span class="line"><span class="comment">// 打印编译错误（如果有的话）</span></span><br><span class="line"><span class="built_in">glGetShaderiv</span>(vertex, GL_COMPILE_STATUS, &amp;success);</span><br><span class="line"><span class="keyword">if</span>(!success)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">glGetShaderInfoLog</span>(vertex, <span class="number">512</span>, <span class="literal">NULL</span>, infoLog);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;ERROR::SHADER::VERTEX::COMPILATION_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 片段着色器也类似</span></span><br><span class="line">[...]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 着色器程序</span></span><br><span class="line">ID = <span class="built_in">glCreateProgram</span>();</span><br><span class="line"><span class="built_in">glAttachShader</span>(ID, vertex);</span><br><span class="line"><span class="built_in">glAttachShader</span>(ID, fragment);</span><br><span class="line"><span class="built_in">glLinkProgram</span>(ID);</span><br><span class="line"><span class="comment">// 打印连接错误（如果有的话）</span></span><br><span class="line"><span class="built_in">glGetProgramiv</span>(ID, GL_LINK_STATUS, &amp;success);</span><br><span class="line"><span class="keyword">if</span>(!success)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">glGetProgramInfoLog</span>(ID, <span class="number">512</span>, <span class="literal">NULL</span>, infoLog);</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;ERROR::SHADER::PROGRAM::LINKING_FAILED\n&quot;</span> &lt;&lt; infoLog &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除着色器，它们已经链接到我们的程序中了，已经不再需要了</span></span><br><span class="line"><span class="built_in">glDeleteShader</span>(vertex);</span><br><span class="line"><span class="built_in">glDeleteShader</span>(fragment);</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2022/10/10/Opengl%E5%AD%A6%E4%B9%A0/">https://cjforeal.github.io/2022/10/10/Opengl%E5%AD%A6%E4%B9%A0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/OpenGl/"># OpenGl</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/10/12/%E6%9E%9A%E4%B8%BE%E7%B1%BB%E7%9A%84%E4%B8%80%E7%82%B9%E5%8F%91%E7%8E%B0/">由枚举引起的一点发现</a>
+            
+            
+            <a class="next" rel="next" href="/2022/09/27/%E7%8A%B6%E6%80%81%E6%9C%BA/">游戏里的状态机应用</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>

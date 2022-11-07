@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>观察者模式实现及优化。 | Cjforeal(鼻屎拌饭)</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">观察者模式实现及优化。</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十月 13, 2022&nbsp;&nbsp;23:46:09</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/GameDesignPatterns/">GameDesignPatterns</a>
+                            
+                        </span>
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">1.5k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">6min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>首先要明确的是观察者与被观察者之间的关系</p>
+<p>对于观察者，如果存在指定的被观察者，则需要将其观察事件派发给被观察者或者其他中介，因为被观察者(中介)才是响应端，被观察者来响应观察事件,而非观察者，如果该观察者将要销毁，则需要回收观察事件。</p>
+<p>对于被观察者，如果存在指定的观察者，则需要接收观察者事件，并在特定时机响应他们，如果已有的观察者丢失，也需要观察者&#x2F;被观察者&#x2F;中介剔除其对应的观察者事件</p>
+<h3 id="最简单的观察者模式实现"><a href="#最简单的观察者模式实现" class="headerlink" title="最简单的观察者模式实现"></a>最简单的观察者模式实现</h3><p>来个情境：</p>
+<p><em><strong>在电车之狼情景下,你是一名正直的路人，你观察着痴汉，如果他有什么变态动作，你就会揭穿他的丑恶行径</strong></em></p>
+<p>有两个问题需要解决：</p>
+<ol>
+<li><p>如果众人皆浊你独清该怎么办？</p>
+<p>电车里1000个人，除了你和Beauty，其余998个人都是痴汉，并且这些痴汉都很独特，那我一个路人里面岂不是要时刻观察记录998个不同种的对象？</p>
+</li>
+<li><p>如果众人皆清你独浊该怎么办？</p>
+<p>这次你变成了痴汉，1000个人的电车里只有你是痴汉，你被999个人观察着,那岂不是999个人都得被你占用精力，记录着除了痴汉属性外的其他无用属性？</p>
+</li>
+</ol>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//首先定义痴汉（被观察者）</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Hentai</span>:<span class="title">MonoBehaviour</span></span><br><span class="line">&#123;	</span><br><span class="line">	<span class="comment">//观察者事件(痴汉执行痴汉行为时响应)</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">event</span> Action Obsever;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(Input.GetKeyDown(KeyCode.R))</span><br><span class="line">		&#123;	      </span><br><span class="line">			Hentaing();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//痴汉开始行动函数</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Hentaing</span>()</span></span><br><span class="line">	&#123;	</span><br><span class="line">        痴汉行动中...</span><br><span class="line">        <span class="comment">//行动后响应观察者事件</span></span><br><span class="line">		Observer();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//路人观察者</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Spectator</span>:<span class="title">MonoBehaviour</span></span><br><span class="line">&#123;	</span><br><span class="line">    <span class="comment">//记录被观察者</span></span><br><span class="line">	<span class="keyword">public</span> Hentai hentai;</span><br><span class="line"> 	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line"> 	&#123;</span><br><span class="line"> 		<span class="comment">//给痴汉添加路人揭穿事件</span></span><br><span class="line"> 		hentai.Observer+=揭穿;</span><br><span class="line"> 	&#125;</span><br><span class="line">    <span class="keyword">void</span> (假设是易语言)揭穿() &#123;&#125;</span><br><span class="line">    <span class="comment">//剔除观察事件</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnDestory</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		hentai.Observer-=MouseRun;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>你也可以用面向接口设计替换event来实现，区别在于，前者，观察事件的接收和剔除由被观察者执行，而在event实现下，观察事件的接收和剔除由观察者执行。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">定义观察者接口</span><br><span class="line">​<span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IObserver</span>&#123;    <span class="function"><span class="keyword">void</span> <span class="title">Monitor</span>()</span>;&#125;</span><br><span class="line">旁观者继承该接口</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Spectator</span>:<span class="title">MonoBehaviour</span>，<span class="title">IObserver</span></span><br><span class="line">就变成了</span><br><span class="line"><span class="comment">//路人观察者</span></span><br><span class="line"><span class="title">public</span> <span class="keyword">class</span> <span class="title">Spectator</span>:<span class="title">MonoBehaviour</span>,<span class="title">IObserver</span></span><br><span class="line">&#123;	</span><br><span class="line">    属性字段...</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Monitor</span>()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//痴汉（被观察者）</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Hentai</span>:<span class="title">MonoBehaviour</span></span><br><span class="line">&#123;	</span><br><span class="line">	<span class="comment">//观察者事件(痴汉执行痴汉行为时响应)</span></span><br><span class="line">	<span class="keyword">public</span> List&lt;IObserver&gt; Obsevers;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">NotifyObserver</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> Obsevers)</span><br><span class="line">        &#123;</span><br><span class="line">            a.Monitor();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//添加观察者</span></span><br><span class="line">    Add（）</span><br><span class="line">    <span class="comment">//移除</span></span><br><span class="line">    Remove（）</span><br><span class="line">        </span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">Awake</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Obsevers=<span class="keyword">new</span> List&lt;IObserver&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(Input.GetKeyDown(KeyCode.R))</span><br><span class="line">		&#123;	      </span><br><span class="line">			Hentaing();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//痴汉开始行动函数</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Hentaing</span>()</span></span><br><span class="line">	&#123;	</span><br><span class="line">        痴汉行动中...</span><br><span class="line">        <span class="comment">//行动后响应观察者事件</span></span><br><span class="line">		NotifyObserver();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续优化：</p>
+<p>问题：</p>
+<ol>
+<li><p>之前路人对痴汉的关系都是简单的二分关系，如果路人也被痴汉观察着呢？如果再加上美女观察痴汉，痴汉观察美女，路人，路人观察痴汉，美女的关系呢?</p>
+<p>当关系越来越复杂，既是观察者也是被观察者的身份存在时，继续用上面的方法些就会越来越纠缠不清，所以需要解耦.</p>
+</li>
+<li><p>观察者路人不但有正直的，还有冷漠的，若是正直的路人要揭发，就可能存在要传递痴汉的某个信息，就代表了要传参，</p>
+<p>若是冷漠的路人，他将会无动于衷，就代表了他的观察事件是无需传参的。</p>
+<p>所以我们还需要对事件进行一定程度的封装。</p>
+</li>
+</ol>
+<h3 id="优化之事件中心"><a href="#优化之事件中心" class="headerlink" title="优化之事件中心"></a>优化之事件中心</h3><p>为了解耦，事件中心就产生了。</p>
+<p>它相当于在观察者于被观察者间增加了个中介，所有(被)观察者只知道中介，而不知道对方，中介负责所有观察事件的接收和响应以及删除</p>
+<p>事件中心是全局唯一的，所有用单例模式。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> UnityEngine.Events;</span><br><span class="line"><span class="comment">//事件封装</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IEventInfo</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EventInfo</span>&lt;<span class="title">T</span>&gt; : <span class="title">IEventInfo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> UnityAction&lt;T&gt; actions;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EventInfo</span>(<span class="params"> UnityAction&lt;T&gt; action</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        actions += action;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EventInfo</span> : <span class="title">IEventInfo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> UnityAction actions;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EventInfo</span>(<span class="params">UnityAction action</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        actions += action;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//事件中心</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EventCenter</span> : <span class="title">BasicManager</span>&lt;<span class="title">EventCenter</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//key —— 事件的名字</span></span><br><span class="line">    <span class="comment">//value —— 对应的委托函数</span></span><br><span class="line">    <span class="keyword">private</span> Dictionary&lt;<span class="built_in">string</span>, IEventInfo&gt; eventDic = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, IEventInfo&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 监听需要参数传递的事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;name&quot;&gt;</span>事件的名字<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;action&quot;&gt;</span>准备用来处理事件 的委托函数<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddEventListener</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> name, UnityAction&lt;T&gt; action</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//有对应事件的情况</span></span><br><span class="line">        <span class="keyword">if</span>( eventDic.ContainsKey(name) )</span><br><span class="line">        &#123;</span><br><span class="line">            (eventDic[name] <span class="keyword">as</span> EventInfo&lt;T&gt;).actions += action;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没有的情况</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            eventDic.Add(name, <span class="keyword">new</span> EventInfo&lt;T&gt;( action ));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 监听不需要参数传递的事件</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddEventListener</span>(<span class="params"><span class="built_in">string</span> name, UnityAction action</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//有的情况</span></span><br><span class="line">        <span class="keyword">if</span> (eventDic.ContainsKey(name))</span><br><span class="line">        &#123;</span><br><span class="line">            (eventDic[name] <span class="keyword">as</span> EventInfo).actions += action;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没有的情况</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            eventDic.Add(name, <span class="keyword">new</span> EventInfo(action));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 移除需要参数的事件监听</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">RemoveEventListener</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> name, UnityAction&lt;T&gt; action</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (eventDic.ContainsKey(name))</span><br><span class="line">            (eventDic[name] <span class="keyword">as</span> EventInfo&lt;T&gt;).actions -= action;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 移除不需要参数的事件</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">RemoveEventListener</span>(<span class="params"><span class="built_in">string</span> name, UnityAction action</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (eventDic.ContainsKey(name))</span><br><span class="line">            (eventDic[name] <span class="keyword">as</span> EventInfo).actions -= action;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 触发需要参数的事件</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">EventTrigger</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> name, T info</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (eventDic.ContainsKey(name))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>((eventDic[name] <span class="keyword">as</span> EventInfo&lt;T&gt;).actions != <span class="literal">null</span>)</span><br><span class="line">                (eventDic[name] <span class="keyword">as</span> EventInfo&lt;T&gt;).actions.Invoke(info);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span>触发事件（不要参数）</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">EventTrigger</span>(<span class="params"><span class="built_in">string</span> name</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (eventDic.ContainsKey(name))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> ((eventDic[name] <span class="keyword">as</span> EventInfo).actions != <span class="literal">null</span>)</span><br><span class="line">                (eventDic[name] <span class="keyword">as</span> EventInfo).actions.Invoke();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 清空事件</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Clear</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        eventDic.Clear();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2022/10/13/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B9%8B%E4%BA%8B%E4%BB%B6%E4%B8%AD%E5%BF%83/">https://cjforeal.github.io/2022/10/13/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F%E4%B9%8B%E4%BA%8B%E4%BB%B6%E4%B8%AD%E5%BF%83/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%BA%94%E7%94%A8/"># 游戏开发中的设计模式应用</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/10/24/%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84Game101%E6%80%BB%E7%BB%93/">写给自己的Game101总结</a>
+            
+            
+            <a class="next" rel="next" href="/2022/10/12/%E6%B3%9B%E5%9E%8B%E6%A3%80%E7%B4%A2/">泛型检索</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>
