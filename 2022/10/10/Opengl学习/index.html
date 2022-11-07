@@ -368,7 +368,7 @@
 <li>通过<code>glVertexAttribPointer</code>设置的顶点属性配置。</li>
 <li>通过<code>glVertexAttribPointer</code>调用与顶点属性关联的顶点缓冲对象。</li>
 </ul>
-<p>所以当我们绘制图形时，就不需要每次都重复的链接顶点属性，如果当前绑定的顶点数组对象得顶点属性是符合绘制图形时，我们就直接绘制即可，否则绑定对应得VBO，然后再绘制，绘制后根据下一个绘制图形的顶点属性来选择受否解绑当前VAO。这和绑定VBO道理时相通的</p>
+<p>所以当我们绘制图形时，就不需要每次都重复的链接顶点属性，如果当前绑定的顶点数组对象得顶点属性是符合绘制图形时，我们就直接绘制即可，否则绑定对应的<strong>VAO</strong>，然后再绘制，绘制后根据下一个绘制图形的顶点属性来选择受否解绑当前VAO。这和绑定VBO道理时相通的</p>
 </li>
 </ol>
 <h4 id="EBO"><a href="#EBO" class="headerlink" title="EBO"></a>EBO</h4><p>易理解 看这个就好[你好，三角形 - LearnOpenGL CN (learnopengl-cn.github.io)](<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/01">https://learnopengl-cn.github.io/01</a> Getting started&#x2F;04 Hello Triangle&#x2F;)</p>
