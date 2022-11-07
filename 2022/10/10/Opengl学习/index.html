@@ -252,7 +252,7 @@
 <p>Opengl首先接收用户提供的集合数据（顶点和几何图元），然后将它输入到一系列着色器阶段中进行处理，包括：顶点着色，细分着色，图元装配，几何着色，然后他将被送入光栅化单元。光栅化单元负责对所有剪切区域内的图元生成片元数据，然后对每一个生成的片元都执行一个片元着色器。</p>
 <p>顶点着色器和片元着色器是必需的，细分和几何着色器可选。</p>
 <p>着色器语言为GlSL(OpenGL Shading Language).</p>
-<p><img src="/images%5Copengl%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF.png" alt="opengl渲染管线"></p>
+<p><img src="/images/opengl%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF.png" alt="opengl渲染管线"></p>
 </li>
 <li><p><strong>状态机</strong></p>
 <p>OpenGL自身是一个巨大的状态机：一系列的变量描述OpenGL此刻应当如何运行。通过改变上下文变量来改变Opengl状态，状态机同一时间只允许一个状态存在，opengl也是如此，它只允许一个当前对象。</p>
@@ -279,7 +279,7 @@
 </ul>
 </li>
 <li><p>支持的数据类型</p>
-<p><img src="/images%5COpengl%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png" alt="Opengl数据类型"></p>
+<p><img src="/images/Opengl%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png" alt="Opengl数据类型"></p>
 </li>
 </ul>
 <h3 id="创建窗口"><a href="#创建窗口" class="headerlink" title="创建窗口"></a>创建窗口</h3><p>Glfw官方配置窗口指南：<a target="_blank" rel="noopener" href="http://www.glfw.org/docs/latest/window_guide.html">GLFW: Window Guide</a></p>
@@ -324,13 +324,13 @@
 </li>
 <li><p>设置顶点属性</p>
 <p>这一步是为了告诉Opengl如何解析VBO管理的数据。</p>
-<p><img src="/images%5Cimage-20221101221331879.png" alt="image-20221101221331879"></p>
+<p><img src="/images/image-20221101221331879.png" alt="image-20221101221331879"></p>
 <p>具体如何设置得看我们的顶点数据结构，例如</p>
 <p>我们传入的顶点数据只包含位置信息，且</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> vertices[] = &#123;</span><br><span class="line">		<span class="comment">// positions        </span></span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">	&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>下图其在VBO中的结构图</p>
-<p><img src="C:\Users\86187\myBlog\source\images\image-20221101230718828.png" alt="image-20221101230718828"></p>
+<p><img src="/images/image-20221101230718828.png" alt="image-20221101230718828"></p>
 <p>参数一location取决于着色器的标识</p>
 <p>参数二我们这里一次读入三个float，大小为3，</p>
 <p>参数三类型为float，所以传入GL_FLOAT</p>
@@ -397,9 +397,9 @@
 </li>
 </ul>
 <h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>Glsl包含:</p>
-<p><img src="/images%5CGLSL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png" alt="GLSL数据类型"></p>
+<p><img src="/images/GLSL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png" alt="GLSL数据类型"></p>
 <h4 id="写入渲染程序"><a href="#写入渲染程序" class="headerlink" title="写入渲染程序"></a>写入渲染程序</h4><p>流程如下：</p>
-<p><img src="/images%5C%E7%9D%80%E8%89%B2%E5%99%A8%E7%BC%96%E8%AF%91%E9%A1%BA%E5%BA%8F.png" alt="着色器编译顺序"></p>
+<p><img src="/images/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BC%96%E8%AF%91%E9%A1%BA%E5%BA%8F.png" alt="着色器编译顺序"></p>
 <ul>
 <li><p>创建着色器对象</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">GLuint <span class="title">glCreateShader</span><span class="params">(Glenum type)</span></span></span><br><span class="line"><span class="function">分配一个着色器对象，成功则返回一个非零值</span></span><br></pre></td></tr></table></figure>
