@@ -13,7 +13,7 @@
 
 
 
-<title>Lua热更新学习 | Cjforeal(鼻屎拌饭)</title>
+<title>委托随笔 | Cjforeal(鼻屎拌饭)</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Lua热更新学习</h1>
+            <h1 class="post-title">委托随笔</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">十月 28, 2022&nbsp;&nbsp;13:13:58</a>
+                        Date: <a href="#">二月 24, 2023&nbsp;&nbsp;22:40:39</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E7%83%AD%E6%9B%B4%E6%96%B0/">热更新</a>
+                                <a href="/categories/c/">c#</a>
                             
                         </span>
                      
@@ -221,7 +221,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">182</a> 
+                            <a href="">158</a> 
                         </span>
                     
 
@@ -237,21 +237,14 @@
         </header>
 
         <div class="post-content">
-            <h3 id="热更新梗概"><a href="#热更新梗概" class="headerlink" title="热更新梗概"></a>热更新梗概</h3><h4 id="什么是热更新"><a href="#什么是热更新" class="headerlink" title="什么是热更新"></a>什么是热更新</h4><p>游戏或软件更新时，无需重新下载客户端进行安装，而是在应用程序启动的情况下，在内部进行的资源或者代码更新。</p>
-<h4 id="热更新的好处"><a href="#热更新的好处" class="headerlink" title="热更新的好处"></a>热更新的好处</h4><ul>
-<li>迅速修复Bug，避免重复下载安装包，游戏内部更新修复bug</li>
-<li>提升玩家的留存，避免玩家因为超大安装包而流失</li>
-<li>迅速换内核，直接改变游戏内部换成其他类型游戏再露面。</li>
-</ul>
-<h4 id="热更新学习目标"><a href="#热更新学习目标" class="headerlink" title="热更新学习目标"></a>热更新学习目标</h4><ol>
-<li>Unity支持热更新的AssetBundle</li>
-<li>Lua语法</li>
-<li>热更新方案xlua</li>
-<li>热更新实践 基于xlua的背包系统</li>
-</ol>
-<h2 id="Edit-2022-12-14"><a href="#Edit-2022-12-14" class="headerlink" title="Edit(2022-12-14)"></a>Edit(2022-12-14)</h2><p>1,2达成</p>
-<h2 id="Edit-2022-2-10"><a href="#Edit-2022-2-10" class="headerlink" title="Edit(2022-2-10)"></a>Edit(2022-2-10)</h2><p>OK</p>
+            <p>最近都是想到什么干什么，今晚突然感兴趣委托怎么底层实现的，，看完大佬的解说，再结合自己看源码后的一些总结。不求甚解。</p>
+<h2 id="关于delegate关键字"><a href="#关于delegate关键字" class="headerlink" title="关于delegate关键字"></a>关于delegate关键字</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">delegate</span>  <span class="keyword">void</span> <span class="title">Action</span>(<span class="params"><span class="built_in">int</span> x, <span class="built_in">int</span> y</span>)</span>;</span><br></pre></td></tr></table></figure>
 
+<p>delegate说为语法糖也不为过，，上行代码相当于帮我们创建了一个继承于MulticastDelegate的类(MulticastDelegate继承于Delegate)，这就是为什么我们可以将声明的委托当作类来实例化，如下文</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Action a = <span class="keyword">new</span> Action(A);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">A</span>(<span class="params"><span class="built_in">int</span> x,<span class="built_in">int</span> y</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    x = y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以及调用该实例的成员方法invoke</p>
+<h2 id="关于Delegate类"><a href="#关于Delegate类" class="headerlink" title="关于Delegate类"></a>关于Delegate类</h2>
         </div>
 
         
@@ -265,7 +258,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://cjforeal.github.io/2022/10/28/Lua%E7%83%AD%E6%9B%B4%E6%96%B0%E5%AD%A6%E4%B9%A0/">https://cjforeal.github.io/2022/10/28/Lua%E7%83%AD%E6%9B%B4%E6%96%B0%E5%AD%A6%E4%B9%A0/</a></span>
+                        <span><a href="https://cjforeal.github.io/2023/02/24/%E5%A7%94%E6%89%98%E9%9A%8F%E7%AC%94/">https://cjforeal.github.io/2023/02/24/%E5%A7%94%E6%89%98%E9%9A%8F%E7%AC%94/</a></span>
                     </p>
                 
                 
@@ -289,7 +282,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/lua/"># lua</a>
+                        <a href="/tags/c-%E7%AC%94%E8%AE%B0/"># c#笔记</a>
                     
                         
                 </span>
@@ -302,10 +295,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/10/28/AssetBundle/">学习AssetBundle</a>
             
-            
-            <a class="next" rel="next" href="/2022/10/24/%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84Game101%E6%80%BB%E7%BB%93/">写给自己的Game101总结</a>
+            <a class="next" rel="next" href="/2023/02/19/%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%BA%90%E7%A0%81%E6%8B%9C%E8%AF%BB/">C# 优先级队列源码拜读</a>
             
         </section>
 

@@ -253,7 +253,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">4.4k</a> 
+                            <a href="">6.8k</a> 
                         </span>
                     
 
@@ -261,7 +261,7 @@
                     
                         <span class="post-count">
                     Time:
-                            <a href="">18min</a> 
+                            <a href="">27min</a> 
                         </span>
                     
                 </div>
@@ -367,7 +367,7 @@
 </ul>
 <h2 id="罗德里格斯旋转方程-Rodrigues"><a href="#罗德里格斯旋转方程-Rodrigues" class="headerlink" title="罗德里格斯旋转方程(Rodrigues)"></a>罗德里格斯旋转方程(Rodrigues)</h2><p>PASS~</p>
 <h1 id="三维到二维"><a href="#三维到二维" class="headerlink" title="三维到二维"></a>三维到二维</h1><p>从三维到二维有一个既定的过程，举一个现实中的栗子，摆拍</p>
-<p>摆拍首先得把人和物带到拍照的位置，这就是<strong>模型变换(Model Transformation)</strong>.</p>
+<p>摆拍首先得把人和物带到拍照的位置，就是平移缩放旋转等操作，这就是<strong>模型变换(Model Transformation)</strong>.</p>
 <p>摆好相机的位置和相机的朝向，这就是 <strong>视图变换(View Transformation)</strong>.</p>
 <p>然后开始拍照，就存在一个三维到二维投影的过程，这就是<strong>投影变换(Projection Transformation)</strong>.</p>
 <p> 三个合称<strong>MVP变换</strong>，得到的结果为<strong>MVP变换矩阵</strong>。</p>
@@ -380,7 +380,7 @@
 </ol>
 <p>我们要摆放相机，这里有一个约定俗成的规定：</p>
 <p>相机位置位于（0，0，0），朝向为-<strong>z</strong>(0,0,-1)  ，正上方向量为<strong>y</strong>(0,1,0)，</p>
-<p>为什么，因为好处多多，留到以后再说</p>
+<p>为什么，因为好处多多。</p>
 <p>所以我们需要进行以下变换</p>
 <ul>
 <li>将相机坐标<strong>e</strong>平移到原点</li>
@@ -472,6 +472,114 @@
 </blockquote>
 <p>所以视锥体内的一点压缩后的z<code>坐标会有变化吗？ $$ z</code>&#x3D;(n+f)*z-nf&#x3D;nz+fz-nf&#x3D;(z-f)*n+zf(0&gt;&#x3D;n&gt;&#x3D;z&gt;&#x3D;f)<br>$$<br>z-f&gt;0, (z-f)n &lt;0,同时 zf&lt;z&lt;0</p>
 <p>因此我们可以得出z&#96;&lt;z,变换后 z坐标 将会变小(右手坐标系)，即变换后离摄像机更远了。</p>
+<h2 id="屏幕映射"><a href="#屏幕映射" class="headerlink" title="屏幕映射"></a>屏幕映射</h2><p>结果前面的处理，我们得到了一个三维空间下的标准立方体[-1, 1]³，我们需要将他转到屏幕坐标系下，屏幕有以下特点</p>
+<ul>
+<li>屏幕是光栅成像设备，其成像点通常理解为二维数组，数组元素为像素。</li>
+<li>屏幕坐标系原点此处为左下角(0,0)，定义宽度width，和高度height。</li>
+<li>对于屏幕上像素，其位置为(x, y)，其像素中心点的坐标是(x+0.5, y+0.5)。</li>
+</ul>
+<p>先不管它的Z轴数据（由深度缓冲来处理），屏幕映射需要<strong>将X和Y轴 [-1, 1]² 映射到屏幕坐标 [0, width] x [0, height]<strong>，屏幕原点一般在左下角，通过齐次坐标的矩阵，先将 <strong>[-1, 1]² 缩放至 [width, height]，</strong>再平移使得原点坐标对齐，将标准立方体转换成屏幕空间，变换矩阵为</strong>：</strong><br>$$<br>M_{}^{4×4}&#x3D;<br>\begin{pmatrix}<br>\frac {width}2&amp;0&amp;0&amp;\frac {width}2\\<br>0&amp;\frac {height}2&amp;0&amp;\frac {height}2\\<br>0&amp;0&amp;1&amp;0\\<br>0&amp;0&amp;0&amp;1<br>\end{pmatrix}<br>$$</p>
+<h1 id="光栅化"><a href="#光栅化" class="headerlink" title="光栅化"></a>光栅化</h1><p>光栅化的目的在于将之前输出的数据包括 计算处理得到片元。就是要计算出每一个像素的RGB值。其工作主要是</p>
+<ol>
+<li><p>三顶点读取，两两连接，形成三角形。</p>
+</li>
+<li><p>采样，遍历像素点，判断哪些像素位于三角形内</p>
+</li>
+<li><p>循环每个三角形，直到结束</p>
+</li>
+</ol>
+<blockquote>
+<p>为什么是三角形？</p>
+<p>这是由其特性决定的：</p>
+<ul>
+<li>是最基础的多边形，任何多边形都可由三角形组成</li>
+<li>内外定义清晰(叉积)</li>
+<li>方便插值运算,通过三个顶点得出三角形内部的属性。(重心坐标)</li>
+</ul>
+</blockquote>
+<h2 id="判断像素位于三角形内"><a href="#判断像素位于三角形内" class="headerlink" title="判断像素位于三角形内"></a>判断像素位于三角形内</h2><p><strong>叉积</strong></p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>显然没必要判断所有像素</p>
+<ol>
+<li><p><strong>AABB包围盒</strong></p>
+<p>三角形三个顶点xy的最大最小值，由该四个值形成一个包围盒，只判断包围盒内的像素即可。</p>
+</li>
+<li><p><strong>增量横扫</strong></p>
+<p>参考知乎文章<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/126365249">三角形光栅化</a>。</p>
+</li>
+</ol>
+<h2 id="采样"><a href="#采样" class="headerlink" title="采样"></a>采样</h2><blockquote>
+<p>采样是指：对一个函数，用一组离散值作为输入得到函数的一组离散值作为输出，将函数离散化的过程。</p>
+</blockquote>
+<p>在判断像素是否位于三角形内时，我们利用了像素的概念，这就是采样的运用</p>
+<p><strong>而当我们采样频率比不上信号变化的速率时将会导致一些问题，这就是走样</strong>。</p>
+<p>包括锯齿（像素采样）摩尔纹（空间采样）车轮效应（时间采样）</p>
+<h2 id="走样"><a href="#走样" class="headerlink" title="走样"></a>走样</h2><p>探讨为什么产生走样就要了了解这些关键词：</p>
+<p>傅里叶级数展开，傅里叶变换<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1aW4y1y7Hs/?spm_id_from=333.337.search-card.all.click&vd_source=40c05ccabd427bd5c6b9f1b86d398745">李永乐简单讲解傅里叶</a>和可视化展示<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1pW411J7s8/?spm_id_from=333.337.search-card.all.click&vd_source=40c05ccabd427bd5c6b9f1b86d398745">形象展示傅里叶变换</a></p>
+<p>二维图片的傅里叶级数展开和傅里叶变化，空域频域和如何品鉴频域图<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/99605178">图像傅里叶变换)</a></p>
+<p>图像卷积</p>
+<p>简单说下结论：</p>
+<p>傅里叶级数意思就是任何周期性函数都可以展开为多个正（余）弦函数的组合，对于周期无法分明的函数我们认为其周期时正负无穷</p>
+<p>傅里叶变换结果就是展开的结果频域，当然可以逆变换。</p>
+<p>空域卷积等于频域乘积。滤波通过卷积实现</p>
+<p>走样本质就是频域发生了重叠导致</p>
+<h2 id="走样的解决方案"><a href="#走样的解决方案" class="headerlink" title="走样的解决方案"></a>走样的解决方案</h2><p>各种抗锯齿方案主要了解MSAA,有兴趣了解TAA,FXAA,SUPER RESOLUTION</p>
+<h1 id="着色"><a href="#着色" class="headerlink" title="着色"></a>着色</h1><blockquote>
+<p>当我们讨论着色器的时候，着色器在想什么？</p>
+<p>它在想这个地方我要什么颜色，这个地方明暗是怎么样的？</p>
+</blockquote>
+<p>着色：对一个物体应用一个材质的过程，它不考虑阴影。</p>
+<h2 id="光照"><a href="#光照" class="headerlink" title="光照"></a>光照</h2><blockquote>
+<p>这里讨论的是Blinn-Phong模型,简化了反射时的吸收等其他影响要素</p>
+</blockquote>
+<p><img src="/images/light.png" alt="light"></p>
+<p>如图，一个物体的受光一般分为三部分，从上倒下依次是</p>
+<ul>
+<li><strong>镜面高光(Specular Highlights)</strong></li>
+<li><strong>漫反射(Diffuse Reflection)</strong></li>
+<li><strong>环境光(Ambient Light)</strong></li>
+</ul>
+<h3 id="光照的局部模型"><a href="#光照的局部模型" class="headerlink" title="光照的局部模型"></a>光照的局部模型</h3><p><strong>对于局部一点的光照，通常采用极限思想，即一束极小的光从光源发出，撞到极小的一点反射到观察者眼中。</strong></p>
+<p>由上可知其需要三点</p>
+<ul>
+<li>光源&#x2F;入射光线， 定义为单位向量<strong>l</strong></li>
+<li>反射面&#x2F;法向量,    定义为单位向量<strong>n</strong></li>
+<li>观察者&#x2F;反射光线 ,定义为单位向量<strong>v</strong></li>
+</ul>
+<p>正如下图</p>
+<p><img src="/images/view.png" alt="view"></p>
+<h3 id="漫反射"><a href="#漫反射" class="headerlink" title="漫反射"></a>漫反射</h3><blockquote>
+<p>在量子光学中，光的能量是量子化的，我们称光的量子为光量子</p>
+<p>个人对量子光学的理解也只停留在高中物理课上的光电效应等程度上，但也够了</p>
+</blockquote>
+<p> <img src="/images/%E6%BC%AB%E5%8F%8D%E5%B0%84.png" alt="1"></p>
+<p>如图,漫反射定义为入射光向四面八方反射强度相同的光。反射光互不平行。</p>
+<p>虽然这是张平面图，但是反射是立体的，正如尾兽玉爆炸时的扩散。</p>
+<p>反射光的强度和入射光相比明显是更小的，这里影响系数是入射光和法向量的夹角θ的余弦(兰伯特定律Lambert’s Law)，就像使夏天太阳光直射北回归线，冬天直射南回归线时的强度变化。</p>
+<p>我们设入射光强度为<strong>I</strong>，则反射光强为<br>$$<br>Icosθ<br>$$<br>此外还有第二个影响要素，在真空环境下，在漫反射光的传播过程中，能量分布相当于是从小球壳到大球壳的传播的过程，根据能量守恒定律，小球壳上能量和大球壳上的能量是相等的，因此，大球壳单位面积上的能量就会更小，这里就存在一个单位面积光强和表面积的反比关系，设观察者离漫反射点的距离为<strong>R</strong>，则有<br>$$<br>Icosθ&#x2F;r^2<br>$$</p>
+<p>综合以上有漫反射公式<br>$$<br>L_{diffuse}&#x3D;\frac{I}{R^2}max(0,cosθ)<br>$$<br>加上物体表面漫反射系数k，并带入<strong>n,l</strong>,得到最终公式<br>$$<br>L_{diffuse}&#x3D;k_d\frac{I}{R^2}max(0,\vec n\cdot \vec l)<br>$$</p>
+<h3 id="高光"><a href="#高光" class="headerlink" title="高光"></a>高光</h3><p>着色点材质较光滑时，反射接近镜面反射（但也仅是接近），与漫反射强度分析一致，分两步，反射后的强度衰减，反射光传播中的强度衰减，其中后者是相同的道理，这里需要明白前者。</p>
+<p>通俗理解，什么情况下，其强度会更强？那就是反射光越接近理论上的镜面反射光的时候，也就是说，观察者的观测向量越接近镜面反射光时，观测到的高光越强，计算接近程度时用两向量点乘。</p>
+<p><img src="/images/%E9%AB%98%E5%85%89.png" alt="高光"></p>
+<p>如图，定义镜面反射光为<strong>m</strong>，入射光强为<strong>I</strong>所以高光反射强度为<br>$$<br>I \vec v\cdot \vec m<br>$$<br>加上第二步中的公式，以及考虑物体表面高光反射系数k得到Phong模型下的高光公式<br>$$<br>L_s&#x3D;k_s(\frac{I}{R^2})max(0,\vec m\cdot \vec v)^p<br>$$<br>这里加个指数P是为了控制高光反射面积的大小和能够看到高光的范围。当<em>p</em>的值越大，反射面积(能看到高光的范围)越小。</p>
+<p>Blinn-Phong模型简化了镜面反射光的计算，经验化的转成了通过计算半程向量<strong>h</strong>和法向量<strong>n</strong>的接近程度。半程向量就是角平分线向量，四边形法则相加后单位化再即可<br>$$<br>\vec h&#x3D;\frac {\vec v +\vec l} {|\vec v +\vec l|}<br>$$</p>
+<p>所以有高光反射公式<br>$$<br>L_s&#x3D;k_s(\frac{I}{R^2})max(0,\vec n\cdot \vec h)^p<br>$$</p>
+<h3 id="环境光"><a href="#环境光" class="headerlink" title="环境光"></a>环境光</h3><p>环境光就是从四面八方反射到来的光，这些光都有各自丰富的故事，很是复杂，这里大胆的假设光强全都一致(后续有全局光照，光追等)<br>$$<br>L_a&#x3D;k_aI_a<br>$$<br>通常就是材质的RGB数值。</p>
+<p>就这样把三个公式加起来就得到了Blinn-Phong模型的光照公式<br>$$<br>L&#x3D;k_d\frac{I}{R^2}max(0,\vec n\cdot \vec l)+k_s(\frac{I}{R^2})max(0,\vec m\cdot \vec v)^p+k_aI_a<br>$$</p>
+<h2 id="着色频率"><a href="#着色频率" class="headerlink" title="着色频率"></a>着色频率</h2><p>分为三种，也就是三种不同的着色算法</p>
+<ul>
+<li><p>Flat Shading 逐片元着色</p>
+<p>根据每个三角形的法向量着色。</p>
+</li>
+<li><p>Gouraud Shading 逐顶点着色</p>
+<p>通过计算顶点所关联的面的法向量的平均来求得顶点法向量，再通过对三个顶点着色结果的线性插值计算得到片元的着色.</p>
+</li>
+<li><p>Phong Shading 逐像素着色</p>
+</li>
+</ul>
+<h2 id="纹理-Texture-贴图-Map-映射-Mapping"><a href="#纹理-Texture-贴图-Map-映射-Mapping" class="headerlink" title="纹理(Texture) |贴图(Map)|映射(Mapping)"></a>纹理(Texture) |贴图(Map)|映射(Mapping)</h2><p>上述解决了着色时明暗问题，但是不同着色点的属性不一定相同，比如颜色，漫反射高光反射系数，为了解决这个问题，我们使用<strong>纹理</strong>。<strong>纹理就是着色点的属性，属性一词就包括了各式各样的数据，就是上面说的颜色，反射系数等数据。</strong></p>
+<p>而一个3D物体的表面有各式各样的着色点，如果我们把它的表面展开，就如下图</p>
+<p><img src="/images/%E7%BA%B9%E7%90%86.png" alt="纹理"></p>
+<p>我们把右一图上某一点的纹理应用到了左一渲染图上的对应点，而这个过程，我们就称为<strong>纹理映射</strong>。右一图上保存着所有着色点的纹理和其他数据，如uv坐标等，这个图我们就称为<strong>贴图</strong>。</p>
 
         </div>
 

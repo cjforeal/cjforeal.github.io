@@ -13,7 +13,7 @@
 
 
 
-<title>Lua热更新学习 | Cjforeal(鼻屎拌饭)</title>
+<title>C# 优先级队列源码拜读 | Cjforeal(鼻屎拌饭)</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Lua热更新学习</h1>
+            <h1 class="post-title">C# 优先级队列源码拜读</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">十月 28, 2022&nbsp;&nbsp;13:13:58</a>
+                        Date: <a href="#">二月 19, 2023&nbsp;&nbsp;18:56:37</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E7%83%AD%E6%9B%B4%E6%96%B0/">热更新</a>
+                                <a href="/categories/c/">c#</a>
                             
                         </span>
                      
@@ -221,7 +221,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">182</a> 
+                            <a href="">596</a> 
                         </span>
                     
 
@@ -229,7 +229,7 @@
                     
                         <span class="post-count">
                     Time:
-                            <a href="">1min</a> 
+                            <a href="">2min</a> 
                         </span>
                     
                 </div>
@@ -237,20 +237,67 @@
         </header>
 
         <div class="post-content">
-            <h3 id="热更新梗概"><a href="#热更新梗概" class="headerlink" title="热更新梗概"></a>热更新梗概</h3><h4 id="什么是热更新"><a href="#什么是热更新" class="headerlink" title="什么是热更新"></a>什么是热更新</h4><p>游戏或软件更新时，无需重新下载客户端进行安装，而是在应用程序启动的情况下，在内部进行的资源或者代码更新。</p>
-<h4 id="热更新的好处"><a href="#热更新的好处" class="headerlink" title="热更新的好处"></a>热更新的好处</h4><ul>
-<li>迅速修复Bug，避免重复下载安装包，游戏内部更新修复bug</li>
-<li>提升玩家的留存，避免玩家因为超大安装包而流失</li>
-<li>迅速换内核，直接改变游戏内部换成其他类型游戏再露面。</li>
+            <h1 id="PriorityQueue-lt-TElement-TPriority-gt"><a href="#PriorityQueue-lt-TElement-TPriority-gt" class="headerlink" title="PriorityQueue&lt;TElement,TPriority&gt;"></a>PriorityQueue&lt;TElement,TPriority&gt;</h1><h2 id="基本容器"><a href="#基本容器" class="headerlink" title="基本容器"></a>基本容器</h2><p>值元组数组保存着所有节点</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> Represents an implicit heap-ordered complete d-ary tree, stored as an array.</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">private</span> (TElement Element, TPriority Priority)[] _nodes;</span><br></pre></td></tr></table></figure>
+
+<p>通常来讲优先级队列的逻辑结构由堆实现，而堆是一棵完全二叉树 ，但这里用的是一颗<strong>四叉树</strong>。</p>
+<p>至于为什么，维基百写道🤭：<a href="https://link.zhihu.com/?target=https://en.wikipedia.org/wiki/D-ary_heap">wiki！</a></p>
+<p>所以这里父子节点索引关系是：<br>$$<br>(son-1)&gt;&gt;2&#x3D;daddy\<br>(daddy&lt;&lt;2)+1&#x3D;firstSon<br>$$</p>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p>构造方法共有六，区别就在于有无初始容量，比较器，迭代器</p>
+<ul>
+<li>若初始容量未传参，则调用Array.Empty返回空数组</li>
+<li>传入迭代器则迭代循环赋值</li>
+<li>无比较器传参，指定默认TPriority比较器，，同时字段_comparer赋值null，表示使用默认比较器</li>
 </ul>
-<h4 id="热更新学习目标"><a href="#热更新学习目标" class="headerlink" title="热更新学习目标"></a>热更新学习目标</h4><ol>
-<li>Unity支持热更新的AssetBundle</li>
-<li>Lua语法</li>
-<li>热更新方案xlua</li>
-<li>热更新实践 基于xlua的背包系统</li>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li>&#96;&#96;&#96;c#<br>void Enqueue(TElement element, TPriority priority)<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  1. 首先检查容量大小，如果当前长度和容量相同则调用``void Grow(int minCapacity)``扩容</span><br><span class="line"></span><br><span class="line">     扩容系数未2，最小扩容长度为4</span><br><span class="line"></span><br><span class="line">  2. 根据是否使用默认比较器调用对应的向上堆排序方法</span><br><span class="line"></span><br><span class="line">     ``void MoveUpDefaultComparer((TElement Element, TPriority Priority) node, int nodeIndex)``  </span><br><span class="line"></span><br><span class="line">- ```c#</span><br><span class="line">  TElement Dequeue()</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>取首元素和最后一个元素LastNode</p>
+</li>
+<li><p>向下堆排序具体操作如下</p>
+<ul>
+<li><pre><code class="c#">while ((i = GetFirstChildIndex(nodeIndex)) &lt; size)
+&#123;
+    // Find the child node with the minimal priority
+    (TElement Element, TPriority Priority) minChild = nodes[i];
+    int minChildIndex = i;
+
+    int childIndexUpperBound = Math.Min(i + Arity, size);
+    while (++i &lt; childIndexUpperBound)
+    &#123;
+        (TElement Element, TPriority Priority) nextChild = nodes[i];
+        if (Comparer&lt;TPriority&gt;.Default.Compare(nextChild.Priority, minChild.Priority) &lt; 0)
+        &#123;
+            minChild = nextChild;
+            minChildIndex = i;
+        &#125;
+    &#125;
+
+    // Heap property is satisfied; insert node in this location.
+    if (Comparer&lt;TPriority&gt;.Default.Compare(node.Priority, minChild.Priority) &lt;= 0)
+    &#123;
+        break;
+    &#125;
+
+    // Move the minimal child up by one node and
+    // continue recursively from its location.
+    nodes[nodeIndex] = minChild;
+    nodeIndex = minChildIndex;
+&#125;
+</code></pre>
+<p>两层嵌套循环，</p>
+<p>第一层循环是从父节点的第一个子节点开始，终止条件是索引超过现有长度，或者LastNode优先级小于等于当前节点优先级</p>
+<p>第二次循环时子节点的循环，取得其最小优先级节点minChild后循环结束，此时判断LastNode优先级是否小于等于minChild优先级，若是break，若不是赋值父节点为minChild,同时选取minChild的索引为第一层循环的nodeindex</p>
+<p>循环结束后，将当前节点赋值为LastNode，LastNode置为默认值。</p>
+</li>
+</ul>
+</li>
+<li><p>其他方法大多异曲同工.</p>
+</li>
 </ol>
-<h2 id="Edit-2022-12-14"><a href="#Edit-2022-12-14" class="headerlink" title="Edit(2022-12-14)"></a>Edit(2022-12-14)</h2><p>1,2达成</p>
-<h2 id="Edit-2022-2-10"><a href="#Edit-2022-2-10" class="headerlink" title="Edit(2022-2-10)"></a>Edit(2022-2-10)</h2><p>OK</p>
+</li>
+</ul>
 
         </div>
 
@@ -265,7 +312,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://cjforeal.github.io/2022/10/28/Lua%E7%83%AD%E6%9B%B4%E6%96%B0%E5%AD%A6%E4%B9%A0/">https://cjforeal.github.io/2022/10/28/Lua%E7%83%AD%E6%9B%B4%E6%96%B0%E5%AD%A6%E4%B9%A0/</a></span>
+                        <span><a href="https://cjforeal.github.io/2023/02/19/%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%BA%90%E7%A0%81%E6%8B%9C%E8%AF%BB/">https://cjforeal.github.io/2023/02/19/%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%BA%90%E7%A0%81%E6%8B%9C%E8%AF%BB/</a></span>
                     </p>
                 
                 
@@ -289,7 +336,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/lua/"># lua</a>
+                        <a href="/tags/c-%E7%AC%94%E8%AE%B0/"># c#笔记</a>
                     
                         
                 </span>
@@ -302,10 +349,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/10/28/AssetBundle/">学习AssetBundle</a>
+                <a class="prev" rel="prev" href="/2023/02/24/%E5%A7%94%E6%89%98%E9%9A%8F%E7%AC%94/">委托随笔</a>
             
             
-            <a class="next" rel="next" href="/2022/10/24/%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84Game101%E6%80%BB%E7%BB%93/">写给自己的Game101总结</a>
+            <a class="next" rel="next" href="/2023/02/18/%E5%8F%8C%E5%90%91%E9%98%9F%E5%88%97%E4%BB%A5%E5%8F%8A%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97/">双向队列以及单调队列</a>
             
         </section>
 
