@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>游戏性能优化+实践 | Cjforeal(鼻屎拌饭)</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">游戏性能优化+实践</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">七月 13, 2023&nbsp;&nbsp;0:20:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Unity/">Unity</a>
+                            
+                        </span>
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">1.6k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">5min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>只是一个学生浅显的收集信息，然后应用到最近一个啥都没优化的小游戏之后写的笔记</p>
+</blockquote>
+<h3 id="认识组件"><a href="#认识组件" class="headerlink" title="认识组件"></a>认识组件</h3><p>要做各种意义上的优化要借助下三个unity视窗，unity优化离不开这些，甚至可以说优化就是试着减小上面视窗各字段的大小；</p>
+<p><strong>Stats</strong></p>
+<p><img src="/images/image-20231013142636012.png" alt="Stats"></p>
+<p><strong>Frame Debugger</strong></p>
+<p><img src="/images/FrameDebugger.png" alt="FrameDebugger"></p>
+<p><em>Frame Debugger</em>展现了每一帧是如何渲染的，以及各种细节，如深度测试，每次drawcall以及未能合批的原因等等内容。</p>
+<p>引：[FrameDebugger描述](<a target="_blank" rel="noopener" href="https://blog.csdn.net/voidinit/article/details/128451450?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-128451450-blog-123028747.235%5Ev38%5Epc_relevant_default_base&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-128451450-blog-123028747.235%5Ev38%5Epc_relevant_default_base&utm_relevant_index=1">从FrameDebugger看Unity渲染_unity render frame_Clank的游戏栈的博客-CSDN博客</a>)</p>
+<p><strong>Profiler</strong></p>
+<p><img src="/images/profiler.png" alt="Profiler"></p>
+<h3 id="认识一些概念"><a href="#认识一些概念" class="headerlink" title="认识一些概念"></a>认识一些概念</h3><ul>
+<li><p>DrawCall</p>
+</li>
+<li><p>SetPassCall</p>
+</li>
+<li><p>OverDraw</p>
+</li>
+<li><p>Batch <a target="_blank" rel="noopener" href="https://gwb.tencent.com/community/detail/113040">图形渲染及优化—Batch-腾讯游戏学堂 (tencent.com)</a></p>
+</li>
+<li><p>Catch命中率</p>
+</li>
+<li><p>时空间复杂度</p>
+<p>pass</p>
+</li>
+<li><p>GC</p>
+</li>
+</ul>
+<p><em>好，你已经全认识了，嘻嘻</em></p>
+<h3 id="认识一些方法"><a href="#认识一些方法" class="headerlink" title="认识一些方法"></a>认识一些方法</h3><p>当我们谈论优化方法时，我们会谈论什么？</p>
+<blockquote>
+<p>优化这个概念可太宽泛了。。。。</p>
+</blockquote>
+<ul>
+<li><p>性能 </p>
+<ul>
+<li><p>渲染</p>
+<ul>
+<li><p>减少drawcall和合批技术</p>
+<p>引：[合批技术介绍](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/356211912">[Unity游戏开发]合批优化汇总 - 知乎 (zhihu.com)</a>)</p>
+<p><a target="_blank" rel="noopener" href="https://gwb.tencent.com/community/detail/114323">图形渲染及优化—Unity合批技术实践-腾讯游戏学堂 (tencent.com)</a></p>
+<p>这里记录一下Ui的合批规则</p>
+</li>
+<li><p>减少Overdraw</p>
+<p>了解很少直接开引:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/350778355">Unity基础：性能杀手Overdraw详解 - 知乎 (zhihu.com)</a></p>
+</li>
+<li><p>选用适合的渲染管线</p>
+</li>
+<li><p>光照</p>
+<ol>
+<li>尽量少用实时光，用烘培后的光照贴图，反射探针，光照探针来减少实时光的应用频率</li>
+<li>阴影模式选择</li>
+</ol>
+</li>
+<li><p>摄像机</p>
+<ol>
+<li>virtual camera</li>
+<li>克制的使用后处理</li>
+<li>相机剔除和LOD技术</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>算法</p>
+<ul>
+<li><p>时空间复杂度优化</p>
+<p>如四叉树技术，又比如根据需求选择恰当的寻路算法，排序等等</p>
+</li>
+<li><p>避免主线程某段时间内过于密集的计算</p>
+<p>分帧算法如incremental GC，异步实现，预处理等等</p>
+</li>
+</ul>
+</li>
+<li><p>削弱GC，减少垃圾内存分配</p>
+<p>​	tricks很多，直接开引：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/352725048">GC介绍及优化</a></p>
+</li>
+<li><p>ECS</p>
+</li>
+<li><p>物理模拟</p>
+<ul>
+<li><p>增加物理帧的频率</p>
+</li>
+<li><p>选择恰当的刚体碰撞模拟算法</p>
+<p>消耗对比</p>
+<p><strong><code>Discreate &lt; Continuous Speculative &lt; Continuous &lt; Continuous Dynamatic</code></strong></p>
+</li>
+<li><p>Layer间的物理检测矩阵设置</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>内存</p>
+<ul>
+<li><p>图形数据</p>
+<p>以下图Profiler Rendering Debugger为例</p>
+<p><img src="/images/Gpu.png" alt="Rendering"></p>
+<ul>
+<li>减少模型顶点，三角面数</li>
+<li>减少或压缩纹理大小</li>
+</ul>
+</li>
+<li><p>资源加载和卸载</p>
+</li>
+<li><p>原型模式或prefab</p>
+</li>
+<li><p>享元模式或scriptableObject </p>
+<p>享元模式方法记录：把共享的数据抽象出来，可以是一个类，再将该类的唯一个对象的引用，注入到需要用该数据的对象类即可。</p>
+</li>
+</ul>
+</li>
+<li><p>网络</p>
+</li>
+<li><p>安全</p>
+</li>
+<li><p>其余tricks</p>
+<ol>
+<li>公共mono模块</li>
+<li>引用传递避免复制</li>
+</ol>
+</li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><blockquote>
+<p>又到了哥们最喜欢的实践环节</p>
+</blockquote>
+<h4 id="游戏介绍"><a href="#游戏介绍" class="headerlink" title="游戏介绍"></a>游戏介绍</h4><p>是一款3D拼图游戏，没有任何优化，写的时候我纯无脑写的</p>
+<p><img src="/images/%E6%8B%BC%E5%9B%BE%E6%B8%B8%E6%88%8F.png" alt="拼图游戏"></p>
+<p>有如下3大需求：</p>
+<ol>
+<li>需要外接传感器，根据甲方要求的理论[^1]对其数据进行计算，得到的结果会实时改变游戏场景;</li>
+<li>六边形网格地图</li>
+<li>3个场景</li>
+</ol>
+<p>下面是具体的优化过程</p>
+<ul>
+<li><p>性能优化</p>
+<ul>
+<li><p>先看脚本和算法改进</p>
+<ul>
+<li><p>发现写的动态生成六边形网格算法本身就两问题</p>
+<ul>
+<li><p>生成网格时有时会重复生成，回退时退不完全</p>
+<p>改进方法：加入了六边形网格坐标，确保生成回退准确</p>
+</li>
+<li><p>六边形数据结构体<code>Hexagon </code>是不变的，却由六边形类重复生成</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HexCell</span> : <span class="title">MonoBehaviour</span>&#123; </span><br><span class="line">    Hexagon hex;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line"><span class="function">    	hex</span> = <span class="keyword">new</span> Hexagon(transform.position.x,transform.position.z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>改进方法：享元模式</p>
+</li>
+</ul>
+</li>
+<li><p>对传感器数据处理的改进</p>
+<p>理论是需要用贝叶斯网络模型来计算的，得到的结果是几个情绪等级。</p>
+<p>这里偷了个懒：我把所有的输入的可能匹配结果先在<code>Netica</code>里计算了出来，再把匹配关系逻辑写在了脚本里，从而省去了构建一个贝叶斯网络模型的计算过程，姑且算是个优化🤥🤥🤥🤥🤥。</p>
+</li>
+<li><p>有多个重复利用的游戏对象(一块块拼图)</p>
+<p>改进方法：建立缓存池</p>
+</li>
+<li><p>再看Profiler</p>
+<ul>
+<li><p>看GC分配发现以下几个地方存在问题</p>
+<p><img src="/images/gc1.png" alt="GC"></p>
+<p><img src="/images/gc2.png" alt="GC"></p>
+<p><img src="/images/gc3.png" alt="GC"></p>
+</li>
+<li><p>看运行时间</p>
+<p>发现Playerloop消耗时间最大3ms，正常在1-2ms之间，消耗最大的是鼠标点击事件</p>
+</li>
+</ul>
+<p><code>FindMainCamera</code> Call就是由于调用了Camera.main。</p>
+</li>
+</ul>
+</li>
+<li><p>再看游戏Ui优化</p>
+<p>ui优化目的主要是尽量合批ui，减少drawcall，这里我们通过Stats视窗可以看到ui的批次</p>
+<p><img src="/images/Ui1.png" alt="显示UI"></p>
+<p><img src="/images/Ui2.png" alt="不显示UI"></p>
+<p>可以看到Batches的区别正好就是9个Button，所以可以将其合批，这里通过打图集的方式；</p>
+<p><img src="/images/Ui3.png" alt="UI"></p>
+<p><em>可以看到batches是10，因为Back放在了共享图集，其他由于Size的原因分为了两个图集，所以正好是10</em></p>
+</li>
+<li><p>场景渲染优化</p>
+<p>这是一个有五个物体场景stats信息</p>
+<p><img src="/images/%E5%90%88%E6%89%B9.png" alt="未合批"></p>
+<p>选择合适合批技术，这里最符合的是GPU Instancing技术，应用之后Saved by batching是33.</p>
+<p><img src="/images/%E5%90%88%E6%89%B93.png" alt="合批"></p>
+<p>通过Frame Debugger可以详细的看到Gpu Instancing帮我们合批的结果，拥有相同材质和网格的模型被合批渲染</p>
+<p><img src="/images/%E5%90%88%E6%89%B94.png" alt="合批2"></p>
+</li>
+</ul>
+</li>
+<li><p>内存优化</p>
+<ul>
+<li><p>把多余无用的素材删除（尽管unity打包时会忽略不在资源路径下的多余文件）</p>
+</li>
+<li><p>尽量减少贴图大小</p>
+<p>如<code>Generate Mip Maps</code>,<code>Read/Write Enabled</code>在需要时再启用</p>
+</li>
+<li><p>尽量保证材质球，贴图复用性</p>
+<p>在导入模型时，由于操作不规范，致使unity自动导入了部分重复贴图创建了重复材质球，也有一部分模型原因。</p>
+<p>所以要删除这些重复资源，在三个不同场景中可复用的材质球也需复用，不但减小内存，也对渲染优化有帮助</p>
+<p><img src="/images/%E6%9D%90%E8%B4%A8%E7%90%83.png" alt="材质"></p>
+<p>总共删了200mb上下的材质贴图资源。</p>
+</li>
+<li><p>减小模型面片数</p>
+<p>打开<code>Scene</code>的<code>WireFrame</code>渲染模式，发现模型面片数雀氏可以优化，比如基底六边形面片可以只由4个三角形构成，</p>
+<p>我就可以选择用unity网格绘制算法，至于其他的模型，就只能找模型师傅了。</p>
+<p><img src="/images/%E7%BD%91%E6%A0%BC.png" alt="网格"></p>
+</li>
+</ul>
+</li>
+<li><p>包体优化</p>
+<p>把Resources文件下的多余文件删掉，也可以改用AssetBundle热加载以减小包头大小。</p>
+</li>
+</ul>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p>[^1]: <a target="_blank" rel="noopener" href="https://www.researchgate.net/publication/229060009_Emotion_recognition_from_electromyography_and_skin_conductance">https://www.researchgate.net/publication/229060009_Emotion_recognition_from_electromyography_and_skin_conductance</a> Emotion recognition from electromyography and skin conductance</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2023/07/13/%E6%B8%B8%E6%88%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%AE%9E%E8%B7%B5/">https://cjforeal.github.io/2023/07/13/%E6%B8%B8%E6%88%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%AE%9E%E8%B7%B5/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Unity%E7%AC%94%E8%AE%B0/"># Unity笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/07/09/c/">c</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>

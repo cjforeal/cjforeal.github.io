@@ -13,7 +13,7 @@
 
 
 
-<title>委托随笔 | Cjforeal(鼻屎拌饭)</title>
+<title>父子碰撞随笔 | Cjforeal(鼻屎拌饭)</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">委托随笔</h1>
+            <h1 class="post-title">父子碰撞随笔</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">二月 24, 2023&nbsp;&nbsp;22:40:39</a>
+                        Date: <a href="#">五月 26, 2023&nbsp;&nbsp;23:58:38</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/c/">c#</a>
+                                <a href="/categories/Unity/">Unity</a>
                             
                         </span>
                      
@@ -221,7 +221,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">158</a> 
+                            <a href="">445</a> 
                         </span>
                     
 
@@ -237,14 +237,40 @@
         </header>
 
         <div class="post-content">
-            <p>最近都是想到什么干什么，今晚突然感兴趣委托怎么底层实现的，，看完大佬的解说，再结合自己看源码后的一些总结。不求甚解。</p>
-<h2 id="关于delegate关键字"><a href="#关于delegate关键字" class="headerlink" title="关于delegate关键字"></a>关于delegate关键字</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">delegate</span>  <span class="keyword">void</span> <span class="title">Action</span>(<span class="params"><span class="built_in">int</span> x, <span class="built_in">int</span> y</span>)</span>;</span><br></pre></td></tr></table></figure>
+            <h3 id="父子物体碰撞"><a href="#父子物体碰撞" class="headerlink" title="父子物体碰撞"></a>父子物体碰撞</h3><p>前提须知： 刚体都处于唤醒状态，所有碰撞体层级都能互相碰撞，同一个物体下的碰撞体不会发生碰撞</p>
+<p>父物体 A，子物体B，都有碰撞器</p>
+<p>AB附上了以下代码</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestFamilyCollision</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;   </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Rigidbody rb;</span><br><span class="line">        TryGetComponent&lt;Rigidbody&gt;(<span class="keyword">out</span> rb);</span><br><span class="line">        rb?.WakeUp();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnTriggerEnter</span>(<span class="params">Collider other</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.Log(name + other.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>delegate说为语法糖也不为过，，上行代码相当于帮我们创建了一个继承于MulticastDelegate的类(MulticastDelegate继承于Delegate)，这就是为什么我们可以将声明的委托当作类来实例化，如下文</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Action a = <span class="keyword">new</span> Action(A);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">A</span>(<span class="params"><span class="built_in">int</span> x,<span class="built_in">int</span> y</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    x = y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进行如下两个测试，截图就不贴了麻烦…..</p>
+<h4 id="子物体主动向父物体碰撞"><a href="#子物体主动向父物体碰撞" class="headerlink" title="子物体主动向父物体碰撞"></a>子物体主动向父物体碰撞</h4><p>双方实现了碰撞接口</p>
+<p>A有刚体 B有刚体 ，都能接收</p>
+<p>A有刚体 B无刚体，都无接收</p>
+<p>A无刚体 B有刚体，都能接收</p>
+<p>总结：以刚体为独立的单位，其子物体上若无刚体，则子物体上的碰撞器由父物体上的刚体控制，无法与父物体碰撞器反应。</p>
+<p>其子物体上若由刚体，则其子物体刚体和碰撞器构成一个单位，以此衍生。</p>
+<h4 id="与其他物体C碰撞，父物体会不会接收碰撞事件？"><a href="#与其他物体C碰撞，父物体会不会接收碰撞事件？" class="headerlink" title="与其他物体C碰撞，父物体会不会接收碰撞事件？"></a>与其他物体C碰撞，父物体会不会接收碰撞事件？</h4><ul>
+<li><p>A 刚体 碰撞器 接口，B 碰撞器 接口，C 碰撞器</p>
+<p>BC碰撞 		 B接口输出一次 A接口输出一次</p>
+<p>AC碰撞		  A接口输出一次 </p>
+<p>AB与C碰撞  A接口输出两次 B接口输出一次。</p>
+</li>
+<li><p>A 碰撞器 接口，B 刚体 碰撞器，接口，C 碰撞器</p>
+<p>预测一手：</p>
+<p>BC 				B接口输出一次</p>
+<p>AC					无</p>
+<p>AB与C碰撞  B接口输出一次</p>
+<p>测试后也就是这样</p>
+</li>
+<li><p>A 刚体 碰撞器 接口，B 刚体 碰撞器 接口，C 碰撞器</p>
+<p>预测一手：</p>
+<p>BC 				B接口输出一次</p>
+<p>AC				 A接口输出一次</p>
+<p>AB与C碰撞  A接口输出一次 B接口输出一次</p>
+</li>
+</ul>
+<hr>
 
-<p>以及调用该实例的成员方法invoke</p>
-<h2 id="关于Delegate类"><a href="#关于Delegate类" class="headerlink" title="关于Delegate类"></a>关于Delegate类</h2>
         </div>
 
         
@@ -258,7 +284,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://cjforeal.github.io/2023/02/24/%E5%A7%94%E6%89%98%E9%9A%8F%E7%AC%94/">https://cjforeal.github.io/2023/02/24/%E5%A7%94%E6%89%98%E9%9A%8F%E7%AC%94/</a></span>
+                        <span><a href="https://cjforeal.github.io/2023/05/26/%E7%88%B6%E5%AD%90%E7%A2%B0%E6%92%9E%E9%9A%8F%E7%AC%94/">https://cjforeal.github.io/2023/05/26/%E7%88%B6%E5%AD%90%E7%A2%B0%E6%92%9E%E9%9A%8F%E7%AC%94/</a></span>
                     </p>
                 
                 
@@ -282,7 +308,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/c-%E7%AC%94%E8%AE%B0/"># c#笔记</a>
+                        <a href="/tags/Unity%E7%AC%94%E8%AE%B0/"># Unity笔记</a>
                     
                         
                 </span>
@@ -295,10 +321,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/04/09/depth%E6%94%B6%E8%8E%B7%E6%91%98%E8%A6%81/">c# in depth收获摘要</a>
+                <a class="prev" rel="prev" href="/2023/07/09/c/">c</a>
             
             
-            <a class="next" rel="next" href="/2023/02/19/%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E6%BA%90%E7%A0%81%E6%8B%9C%E8%AF%BB/">C# 优先级队列源码拜读</a>
+            <a class="next" rel="next" href="/2023/04/09/depth%E6%94%B6%E8%8E%B7%E6%91%98%E8%A6%81/">c# in depth收获摘要</a>
             
         </section>
 
