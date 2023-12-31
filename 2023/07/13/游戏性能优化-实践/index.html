@@ -221,7 +221,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">1.6k</a> 
+                            <a href="">1.7k</a> 
                         </span>
                     
 
@@ -229,7 +229,7 @@
                     
                         <span class="post-count">
                     Time:
-                            <a href="">5min</a> 
+                            <a href="">6min</a> 
                         </span>
                     
                 </div>
@@ -279,7 +279,21 @@
 <li><p>减少drawcall和合批技术</p>
 <p>引：[合批技术介绍](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/356211912">[Unity游戏开发]合批优化汇总 - 知乎 (zhihu.com)</a>)</p>
 <p><a target="_blank" rel="noopener" href="https://gwb.tencent.com/community/detail/114323">图形渲染及优化—Unity合批技术实践-腾讯游戏学堂 (tencent.com)</a></p>
-<p>这里记录一下Ui的合批规则</p>
+<p>这里记录一下UGUI的合批规则</p>
+<ol>
+<li><p>Canvas之间不能合批</p>
+</li>
+<li><p>进行合批准备工作：</p>
+<ul>
+<li><p>遍历单个canvas下所有附带Renderer的ui组件，统计该组件 覆盖&#x2F;交叠 底于该层级renderer的数量”depth”，以此得到了一个分组<code>Renderers[Depth[i]]</code></p>
+</li>
+<li><p>依次遍历<code>Renderers[depth]</code>,再按照材质-贴图的顺序进行排列。</p>
+</li>
+</ul>
+</li>
+<li><p>开始合批：遍历<code>Renderers[Depth[i]]</code>，以一维数组展开，判断其下一个Renderer能否与其合批。</p>
+</li>
+</ol>
 </li>
 <li><p>减少Overdraw</p>
 <p>了解很少直接开引:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/350778355">Unity基础：性能杀手Overdraw详解 - 知乎 (zhihu.com)</a></p>
