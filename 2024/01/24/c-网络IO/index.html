@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>c#网络IO | Cjforeal(鼻屎拌饭)</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">c#网络IO</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">一月 24, 2024&nbsp;&nbsp;16:36:21</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/c/">c#</a>
+                            
+                        </span>
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">2.4k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">8min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>前三段疯狂CV😚😚😚😚</p>
+</blockquote>
+<h2 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h2><p>在计算机操作系统中，所谓的I&#x2F;O就是 <strong>输入（Input）和输出（Output）</strong>，也可以理解为<strong>读（Read）和写（Write)<strong>，针对不同的对象，I&#x2F;O模式可以划分为</strong>磁盘IO</strong>模型和<strong>网络IO</strong>模型。</p>
+<p>IO操作会涉及到<strong>用户空间</strong>和<strong>内核空间</strong>的转换，先来理解以下规则：</p>
+<ul>
+<li>内存空间分为用户空间和内核空间，也称为用户缓冲区和内核缓冲区；</li>
+<li>用户的应用程序不能直接操作内核空间，需要将数据从内核空间拷贝到用户空间才能使用；</li>
+<li>无论是read操作，还是write操作，都只能在内核空间里执行；</li>
+<li>磁盘IO和网络IO请求加载到内存的数据都是先放在内核空间的；</li>
+</ul>
+<p>再来看看所谓的读（Read）和写（Write)操作：</p>
+<ul>
+<li><strong>读操作</strong>：操作系统检查内核缓冲区有没有需要的数据，如果内核缓冲区已经有需要的数据了，那么就直接把内核空间的数据copy到用户空间，供用户的应用程序使用。如果内核缓冲区没有需要的数据，对于磁盘IO，直接从磁盘中读取到内核缓冲区（这个过程可以不需要cpu参与）。而对于网络IO，应用程序需要等待客户端发送数据，从网卡中去取数据。</li>
+<li><strong>写操作</strong>：用户的应用程序将数据从用户空间copy到内核空间的缓冲区中（如果用户空间没有相应的数据，则需要从磁盘—&gt;内核缓冲区—&gt;用户缓冲区依次读取），这时对用户程序来说写操作就已经完成，至于什么时候再写到磁盘或通过网络发送出去，由操作系统决定。除非应用程序显示地调用了sync 命令，立即把数据写入磁盘，或执行flush()方法，通过网络把数据发送出去<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%BB%BD%E5%BE%88%E5%85%A8%E5%BE%88%E5%85%A8%E7%9A%84IO%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%B8%8E%E6%A6%82%E5%BF%B5.https://zhuanlan.zhihu.com/p/473639031">^1</a>。</li>
+</ul>
+<h2 id="用户空间-amp-内核空间"><a href="#用户空间-amp-内核空间" class="headerlink" title="用户空间&amp;内核空间"></a>用户空间&amp;内核空间</h2><p> Linux 操作系统中的概念里，虚拟内存（操作系统中的概念，和物理内存是对应的）被操作系统划分成两块：User Space（用户空间 和 Kernel Space（内核空间），本质上电脑的物理内存是不划分这些的，只是操作系统开机启动后在逻辑上虚拟划分了地址和空间范围。</p>
+<p>操作系统会给每个进程分配一个独立的、连续的虚拟内存地址空间（物理上可能不连续），以32位操作系统为例，该大小一般是4G，即232 。其中将高地址值的内存空间分配给系统内核占用（网上查资料得知：Linux下占1G，Windows下占2G），其余的内存地址空间分配给用户进程使用。</p>
+<p>简单说，<strong>内核空间</strong> 是操作系统 <strong>内核代码运行的地方</strong>，<strong>用户空间</strong> 是 <strong>用户程序代码运行的地方</strong>。当应用进程执行系统调用陷入内核代码中执行时就处于<strong>内核态</strong>，当应用进程在运行用户代码时就处于<strong>用户态</strong>。</p>
+<p>同时内核空间可以执行任意的命令，而用户空间只能执行简单的运算，不能直接调用系统资源和数据。必须通过操作系统提供接口，向系统内核发送指令。</p>
+<p>一旦调用系统接口，应用进程就从用户空间切换到内核空间了，因为开始运行内核代码了<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%BB%BD%E5%BE%88%E5%85%A8%E5%BE%88%E5%85%A8%E7%9A%84IO%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%B8%8E%E6%A6%82%E5%BF%B5.https://zhuanlan.zhihu.com/p/473639031">^1</a>。</p>
+<h2 id="了解一种设备与内存的数据传输方式-DMA"><a href="#了解一种设备与内存的数据传输方式-DMA" class="headerlink" title="了解一种设备与内存的数据传输方式:DMA"></a>了解一种设备与内存的数据传输方式:DMA</h2><p>DMA（直接内存访问，Direct Memory Access）。</p>
+<ol>
+<li>用户进程通过read等系统调用接口向操作系统（即CPU）发出IO请求，请求读取数据到自己的用户内存缓冲区中，然后该进程进入阻塞状态。</li>
+<li>操作系统收到用户进程的请求后，进一步将IO请求发送给DMA，然后CPU就可以去干别的事了。</li>
+<li>DMA将IO请求转发给磁盘。</li>
+<li>磁盘驱动器收到内核的IO请求后，把数据读取到自己的缓冲区中，当磁盘的缓冲区被读满后，向DMA发起中断信号告知自己缓冲区已满。</li>
+<li>DMA收到磁盘驱动器的信号，将磁盘缓冲区中的数据copy到内核缓冲区中，此时不占用CPU（ PIO 这里是占用CPU的）。</li>
+<li>如果内核缓冲区的数据少于用户申请读的数据，则重复步骤3、4、5，直到内核缓冲区的数据符合用户的要求为止。</li>
+<li>内核缓冲区的数据已经符合用户的要求，DMA停止向磁盘发IO请求。</li>
+<li>DMA发送中断信号给CPU。</li>
+<li>CPU收到DMA的信号，知道数据已经准备好，于是将数据从内核空间copy到用户空间，系统调用返回。</li>
+<li>用户进程读取到数据后继续执行原来的任务。</li>
+</ol>
+<p>跟PIO模式相比，DMA就是CPU的一个代理，它负责了一部分的拷贝工作(磁盘&#x2F;网卡缓存区与内核缓存区之间的拷贝)，从而减轻了CPU的负担。而内核缓冲区到用户缓冲区之间的拷贝工作仍然由CPU负责。</p>
+<blockquote>
+<p>以ｃ＃Receive（）为例，展示不同网络ＩＯ模型的伪代码</p>
+</blockquote>
+<p>梳理一次Receive（）的过程</p>
+<ul>
+<li><p>客户端发送数据,保存在网卡缓存区中</p>
+</li>
+<li><p>用户进程向CPU发送IO请求,CPU转手给DMA,DMA转发IO请求到网卡(用户态到内核态的一次转换)</p>
+</li>
+<li><p>网卡将socket buffer Copy到内核缓存区中</p>
+</li>
+<li><p>内核缓存区数据已满或者已达到用户需要,将buffer 拷贝到用户缓存区中(内核态到用户态的一次转换)</p>
+</li>
+</ul>
+<p>注意的是不同缓存区之间的消息copy都是阻塞式的(DMA负责的部分非阻塞b)，同时内核态与用户态之间的转换是存在不可忽视的cpu消耗的.</p>
+<h2 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">byte</span>[] buffer=<span class="keyword">new</span> <span class="built_in">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="built_in">int</span> len= socket.Receive(buffer);</span><br></pre></td></tr></table></figure>
+
+<p>当调用Receive时, 不同缓存区间的数据拷贝,和客户端数据的等待会阻塞当前线程,通常会新开一个线程来进行此操作.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Socket s= socket.Accept();</span><br><span class="line">Thread t = <span class="keyword">new</span> Thread(R);</span><br><span class="line">t.Start(s);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">R</span>(<span class="params"><span class="built_in">object</span> s</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">Socket skt = s <span class="keyword">as</span> Socket;</span><br><span class="line"><span class="built_in">byte</span>[] buffer=<span class="keyword">new</span> <span class="built_in">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="built_in">int</span> len= skt.Receive(buffer);     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当连接数很多时,其开辟线程的消耗和多线程的占用通常难以接受;</p>
+<h2 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h2><p>为了解决阻塞的问题,我们只能依靠操作系统提供的接口,他会帮助我们检查内核缓存区数据是否满足需求,若满足,则拷贝内核缓存区的数据到用户态,否则立即返回一个失败标记(c#会返回一个<code>SocketException 如ErrorCode==10035</code>),以达到非阻塞的效果.</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Socket s= socket.Accept();</span><br><span class="line">-------------------------------------------------------------------------------------</span><br><span class="line"><span class="comment">//设置非阻塞</span></span><br><span class="line">s.Blocking = <span class="literal">false</span>;</span><br><span class="line">Thread t = <span class="keyword">new</span> Thread(R);</span><br><span class="line">t.Start(s);</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">R</span>(<span class="params"><span class="built_in">object</span> s</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Socket skt = s <span class="keyword">as</span> Socket;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">byte</span>[] buffer = <span class="keyword">new</span> <span class="built_in">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="built_in">int</span> len = skt.Receive(buffer);</span><br><span class="line">        <span class="comment">//接收</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span>(SocketException ex)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(ex.ErrorCode==<span class="number">10035</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//处理</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当多连接时,我们通常会保存一个client socket组,以遍历非阻塞式轮询.	</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Socket s= socket.Accept();</span><br><span class="line">-------------------------------------------------------------------------------------</span><br><span class="line">List&lt;Socket&gt; socketList= <span class="keyword">new</span> List&lt;Socket&gt;();</span><br><span class="line">socketList.Add(s);</span><br><span class="line"><span class="keyword">foreach</span>(<span class="keyword">var</span> skt <span class="keyword">in</span> socketList)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">byte</span>[] buffer = <span class="keyword">new</span> <span class="built_in">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="built_in">int</span> len = skt.Receive(buffer);</span><br><span class="line">        <span class="comment">//接收</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (SocketException ex)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (ex.ErrorCode == <span class="number">10035</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//处理</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们可以看到,每次调用Receive()时都会是一次对CPU资源的消耗,涉及用户态内核态的转换.</p>
+<p>有没有可能只调用一次cpu命令,让内核态帮我们遍历所有的client socket的状态呢?</p>
+<p>答案就是下面的多路复用IO.</p>
+<h2 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h2><p>多路复用指的是复用一个线程来检查多个Socket的就绪状态.</p>
+<p>c#提供了两个方式来在规定时间内确定Socket状态,两者都是同步阻塞的.</p>
+<ol>
+<li><code>Poll(Int32 timeout, SelectMode)</code>: 检查当前Socket</li>
+<li><code>Select (System.Collections.IList? checkRead, System.Collections.IList? checkWrite, System.Collections.IList? checkError, TimeSpan timeout)</code>:检查多个Socket</li>
+</ol>
+<p>select 调用需要传入 socket 数组，需要拷贝一份到内核，高并发场景下这样的拷贝消耗的资源是惊人的[^2]。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">SelectSocket</span>(<span class="params"><span class="built_in">object</span>? args</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>(active)</span><br><span class="line">    &#123;</span><br><span class="line">        ResetCheckRead();</span><br><span class="line">        Socket.Select(checkRead, <span class="literal">null</span>, <span class="literal">null</span>, <span class="number">10000</span>);</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="keyword">var</span> a <span class="keyword">in</span> checkRead)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (a == server)</span><br><span class="line">                AcceptClient(a);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                clients[a].ReadClientfd();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="keyword">var</span> c <span class="keyword">in</span> clients.Values)</span><br><span class="line">    &#123;</span><br><span class="line">        c.Close();  </span><br><span class="line">    &#125;</span><br><span class="line">    server.Shutdown(SocketShutdown.Both);</span><br><span class="line">    server.Close();</span><br><span class="line">    server = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h2><p>c#异步网络IO旨在于使用c#的异步模式,让c#自己负责对IO的监听,若完成,则自动调用我们向前订阅的回调方法.回调方法在其他线程中进行,不阻塞当前线程</p>
+<p>c#对此提供了三种异步IO方式</p>
+<ol>
+<li><p>早期的APM机制下的<code>BeginReceive()</code> <code> EndReceive()</code>等方法:</p>
+<p>官方文档明写着不推荐,<code>The Begin/End design pattern currently implemented by the class requires a object be allocated for each asynchronous socket operation.</code>每次异步操作时都需要分配一个<em>IAsyncResult</em> 对象,资源浪费,加剧GC.</p>
+</li>
+<li><p><code>SocketAsyncEventArgs</code> 类</p>
+<p>官方示例代码:<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.socketasynceventargs?view=net-8.0">SocketAsyncEventArgs类（System.Net.Sockets）|微软学习 — SocketAsyncEventArgs Class (System.Net.Sockets) | Microsoft Learn</a></p>
+</li>
+<li><p>在<code>SocketAsyncEventArgs</code>和 基于任务的异步模式基础上封装的<code>SocketTaskExtensions</code></p>
+</li>
+</ol>
+<blockquote>
+<p>一个高性能 .NET I&#x2F;O库 System.IO.Pipelines</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>[^2]:  IO多路复用到底是不是异步的？ - 无聊的闪客的回答 - 知乎</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2024/01/24/c-%E7%BD%91%E7%BB%9CIO/">https://cjforeal.github.io/2024/01/24/c-%E7%BD%91%E7%BB%9CIO/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/c-%E7%AC%94%E8%AE%B0/"># c#笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/07/13/%E6%B8%B8%E6%88%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%AE%9E%E8%B7%B5/">游戏性能优化+实践</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>
