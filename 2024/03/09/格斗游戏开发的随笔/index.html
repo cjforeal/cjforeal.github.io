@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>格斗游戏开发的随笔 | Cjforeal</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">格斗游戏开发的随笔</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 9, 2024&nbsp;&nbsp;22:18:22</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Unity/">Unity</a>
+                            
+                        </span>
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">2.7k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">9min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="基本格斗系统设计"><a href="#基本格斗系统设计" class="headerlink" title="基本格斗系统设计"></a>基本格斗系统设计</h3><h4 id="人物状态"><a href="#人物状态" class="headerlink" title="人物状态"></a>人物状态</h4><ul>
+<li><p>Stand:包括 Walk  Run Idle</p>
+</li>
+<li><p>Jump</p>
+</li>
+<li><p>Crouch</p>
+</li>
+<li><p>Block：Stand_Block Crouch_Block</p>
+<p>判定逻辑:Stand: IsRight?Walk.x&gt;0:Walk.x&lt;0</p>
+<p>0无法防御的投技</p>
+<p>1必须下防</p>
+<p>2站立防御和下防</p>
+</li>
+<li><p>Hurt：等级一： Stand_Hurt Jump_Hurt  Crouch_Hurt</p>
+<p>等级二：HeavyCombat</p>
+<p>等级三：Blow_Hurt</p>
+<p>受伤等级根据受到的攻击优先级决定</p>
+</li>
+</ul>
+<h4 id="场景的空间感"><a href="#场景的空间感" class="headerlink" title="场景的空间感"></a>场景的空间感</h4><ul>
+<li>由3D空间内不同位置摆放不同层次的2D面片构成</li>
+<li>后处理景深</li>
+<li>2dSprite分层，进行视差滚动</li>
+<li>摄像机设为透视投影。</li>
+</ul>
+<h4 id="招式种类与数据分析"><a href="#招式种类与数据分析" class="headerlink" title="招式种类与数据分析"></a>招式种类与数据分析</h4><p>个人归纳为以下几种：</p>
+<ul>
+<li><p>基本招式：如升龙拳：一套动作分为前摇，判定，后摇三部分组成</p>
+<p>分为单指令和多指令</p>
+</li>
+<li><p>序列招式：例如拳皇里的相扑人（J,J,J,J,J） 由前摇，判定，前摇，判定，前摇，判定，后摇组成。</p>
+<p>这里面也可分为循环和非循环两种，总之就是一套动作涵多个判定的招数</p>
+<p>更麻烦的就是一个序列种不同受击帧的有利帧还不同。</p>
+</li>
+<li><p>其他如必杀技和投技:这种就强制动画执行了，IK什么的，我对此表示摸棱两可。也许就是代码严格控制位移等或者用TimeLine这种预先处理好的序列的把</p>
+</li>
+</ul>
+<p>其分别用<code>int枚举 0（单指令基本招式）,1（多指令招式）,2</code>(派生招式),3（循环序列）4(projectile),5（必杀）表示</p>
+<p>招式之间的衔接通常为“Cancel”，派生招式可以取消被派生招式的后摇（前摇，判定–前摇，判定，后摇），其与序列不同的是，序列是一次输入产生的，而派生招式是在被派生招式的基础上搓出指定指令才可释放的招数。某个招式可以被哪些招数取消是要考虑的问题</p>
+<p>更多的可以的细节看街霸6官网的帧数表<img src="/images/g1.png" alt="image-20231216031639711"></p>
+<p>招式格挡属性：</p>
+<p><img src="/images/g2.png" alt="image-20231216034811500"></p>
+<p>对此我分别用3，2，1，0（P也用3表示）</p>
+<h4 id="招式数据"><a href="#招式数据" class="headerlink" title="招式数据"></a>招式数据</h4><p>以Json方式配置， 通过LitJson 进行序列化反序列化</p>
+<h4 id="人物"><a href="#人物" class="headerlink" title="人物"></a>人物</h4><p>组件模式</p>
+<p>实现有限状态机（利用反射）</p>
+<h4 id="严格的帧判定"><a href="#严格的帧判定" class="headerlink" title="严格的帧判定"></a>严格的帧判定</h4><p>基于unitask的异步开发</p>
+<h4 id="碰撞检测"><a href="#碰撞检测" class="headerlink" title="碰撞检测"></a>碰撞检测</h4><p>碰撞盒分为</p>
+<ul>
+<li>位置碰撞盒：1个，范围人物全身，防止双方位置穿模。 <code>Collider Layer:Player</code></li>
+<li>攻击碰撞盒：1个，范围因攻击动画而变。<code>Trigger Layer:PlayerXHit(**‘X’代表1或2，指的是1玩家和2玩家，后文一同**)</code></li>
+<li>受击碰撞盒：6个，分别是头1，左右手各1，身1，左右大腿各1。 <code>Trigger,Layer:PlayerXHurt</code></li>
+</ul>
+<p>Layer碰撞关系设置</p>
+<p>​	玩家自身的碰撞盒不会相互影响，1，2玩家的受击碰撞盒也不会相互影响，位置碰撞盒不与攻&#x2F;受击碰撞盒互相影响</p>
+<p>因此下列层级对不会检测碰撞：</p>
+<ul>
+<li>Player1Hurt ：Player2Hurt</li>
+<li>Player：Player1Hit：Player1Hurt</li>
+<li>Player：Player2Hit：Player2Hurt</li>
+</ul>
+<blockquote>
+<p>在很长一段开发时间里，我一直在用设置<code>hitbox.enabled</code>的方式来控制开启碰撞检测，由于过于频繁的开启和关闭，致使检测的效果很糟糕，问题在哪而不自知，结果后知后觉瞥了一眼，立马发现自己是个<strong>猪鼻</strong>🐷。</p>
+</blockquote>
+<h4 id="搓招"><a href="#搓招" class="headerlink" title="搓招"></a>搓招</h4><p>搓招功能设计：</p>
+<p>方法一：输入缓存记录100帧内的输入，从当前输入开始，由后向前遍历过去的限定数量的输入</p>
+<p>方法二：从前向后</p>
+<p>方法一更好</p>
+<p>方法二缺点：</p>
+<p>现有两搓招指令分别为</p>
+<ol>
+<li>S,D,J</li>
+<li>D,A,J</li>
+</ol>
+<p>如果此时我正输入s键想释放招数一，但突然想改为二连招，那么我的输入顺序为 S,D,A,J，</p>
+<p>如果为方法二，检测时的逻辑为:</p>
+<ul>
+<li>S:进入连招一的指令输入状态</li>
+<li>D:持续连招一的指令输入状态</li>
+<li>A:退出连招一的指令输入状态，重新寻找招式</li>
+<li>J:无反应</li>
+</ul>
+<p>方法一逻辑：</p>
+<ul>
+<li>J:进入连招一&#x2F;连招二的指令输入状态</li>
+<li>A:退出连招一的指令输入状态</li>
+<li>D:与招式二配对</li>
+<li>S:检测有无更高优先级的招式配对</li>
+</ul>
+<p>显然方法一更好</p>
+<p>实现了个动作状态机，用来管理搓招和连击，及其动画和碰撞检测</p>
+<ul>
+<li>有利帧不利帧</li>
+</ul>
+<p>搓招出招表用json文件配置，序列化对象 用数字表示输入</p>
+<p>连招可以再搓招的ComboData类中写明他的连招是什么，</p>
+<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><p>按键输入参考街霸6（此处讨论的是搓招输入处理，而非移动输入处理）</p>
+<ul>
+<li><p>方向为八个方向有：上,下,左,右,右上,右下,左上,左下 对应按键都明白</p>
+<p>键盘需要优化按键</p>
+</li>
+<li><p>只在Keyup KeyDown两种情况下有指令输入，指令输入判断先后关系为为：复合型攻击输入&gt;复合型方向键输入&gt;攻击键输入&gt;方向键输入</p>
+<p>复合型输入指 WA SD DJ这种前键Hold 后键Down&#x2F;Up类的输入。</p>
+</li>
+<li><p>人物的移动输入和动作输入分开，</p>
+</li>
+<li><p>输入按键之间的时间间隔控制着搓招输入的难度</p>
+</li>
+<li><p>可以适当的放松指令判定的严格度</p>
+</li>
+<li><p>无输入是指令0,而0的指令是不会引起搓招检测的，但对于指令0的判定想法很多</p>
+<p>移动键和攻击键的Hold输入是不是一种0的情况，有待商榷了。</p>
+<p>若有蓄力输入的情况：两者都不能为0；</p>
+<p>若要降低搓招难度：两者可以为0，此时搓招难度就只取决于在输入间隔以内玩家有没有输入指定的招式指令，而不是严格的每帧输入检测（尽管代码还是每帧检测，但逻辑上可以归纳），也就是说前者输入难度秒级，后者输入难度是帧级。</p>
+</li>
+</ul>
+<p>按键指令表:</p>
+<table>
+<thead>
+<tr>
+<th align="center">按键</th>
+<th align="center">指令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">W(上)</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">D(前)</td>
+<td align="center">6</td>
+</tr>
+<tr>
+<td align="center">S(下)</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">A(后)</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">J(轻拳)</td>
+<td align="center">11</td>
+</tr>
+<tr>
+<td align="center">L(中拳)</td>
+<td align="center">12</td>
+</tr>
+<tr>
+<td align="center">D+J(重拳)</td>
+<td align="center">17</td>
+</tr>
+<tr>
+<td align="center">A&#x2F;D+L(里投)</td>
+<td align="center">16&#x2F;18</td>
+</tr>
+<tr>
+<td align="center">K(轻脚)</td>
+<td align="center">21</td>
+</tr>
+<tr>
+<td align="center">U(重脚)</td>
+<td align="center">22</td>
+</tr>
+<tr>
+<td align="center">A&#x2F;D+U(里投)</td>
+<td align="center">26&#x2F;28</td>
+</tr>
+<tr>
+<td align="center">WA(左上)</td>
+<td align="center">7</td>
+</tr>
+<tr>
+<td align="center">WD(右上)</td>
+<td align="center">9</td>
+</tr>
+<tr>
+<td align="center">SD(右下)</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td align="center">AS(左下)</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">无输入&#x2F;按住攻击输入键</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+</tbody></table>
+<p>输入缓存取消机制：</p>
+<ul>
+<li>输入间隔超过限制时间</li>
+<li>释放招式后</li>
+<li>被攻击</li>
+</ul>
+<h4 id="受击反馈"><a href="#受击反馈" class="headerlink" title="受击反馈"></a>受击反馈</h4><ul>
+<li>受击动画</li>
+<li>特效&#x2F;音效</li>
+<li>顿帧</li>
+<li>屏幕震动</li>
+<li>位移</li>
+</ul>
+<p>顺序：受击动画 特效 屏幕震动 同步 </p>
+<p>​			异步： 顿帧 结束后 位移</p>
+<p>同时不同招数在不同受击类型下的反馈也应是不同的；</p>
+<p>姑且分为</p>
+<ul>
+<li>挥空 无反馈</li>
+<li>有效攻击&#x2F;是否板边&#x2F;是否空中</li>
+<li>无效攻击&#x2F;是否板边（被格挡）&#x2F;是否空中</li>
+</ul>
+<p>参考隆</p>
+<table>
+<thead>
+<tr>
+<th align="left">招式</th>
+<th align="center">有效攻击非板边</th>
+<th>有效攻击板边</th>
+<th>无效攻击非板边</th>
+<th>无效攻击板边</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">站轻拳</td>
+<td align="center">无</td>
+<td>后退</td>
+<td>无反应</td>
+<td>后退</td>
+</tr>
+<tr>
+<td align="left">站中拳</td>
+<td align="center">无</td>
+<td>后退</td>
+<td>无反应</td>
+<td>后退</td>
+</tr>
+<tr>
+<td align="left">站重拳</td>
+<td align="center">前进</td>
+<td>后退</td>
+<td>无反应</td>
+<td>后退</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>人物受击时的位移也该由受击动作和当前状态共同决定</p>
+<h4 id="预输入"><a href="#预输入" class="headerlink" title="预输入"></a>预输入</h4><p>从攻击开始到攻击结束是预输入时间段，在这段时间内，仍会检测玩家指令，并保存优先级最高的动作，在这段时间结束后，若攻击挥空或者受伤，则无事发生，若未挥空且预输入时间段内有动作保存，则在攻击后摇阶段释放该动作（如果两动作之间存在取消&#x2F;派生关系，则按取消关系来处理）。</p>
+<p>挥空判定逻辑：每次出招时，设定挥空&#x3D;true；</p>
+<p>HitBox触发：设定挥空&#x3D;false</p>
+<p>若AB两角色互相攻击 A先接收消息</p>
+<p>A HitEvent  A.挥空false B HurtEvent B.挥空&#x3D;true B.State&#x3D;Hurt</p>
+<p>B HitEvent  Hurtstate B.挥空 true A hurtEvent 挥空&#x3D;false；</p>
+<h4 id="残留指令"><a href="#残留指令" class="headerlink" title="残留指令"></a>残留指令</h4><p>残留指令是指玩家每次释放招式后将不会清空输入缓存，留到下次搓招以简化出招。但可能会出现串招的情况。</p>
+<h4 id="派生攻击处理"><a href="#派生攻击处理" class="headerlink" title="派生攻击处理"></a>派生攻击处理</h4><p>派生攻击：招式A有派生攻击B，招式A释放后，若在A结束之前搓出派生动作的指令，即可取消A的未执行帧，在A攻击检测帧之后马上释放派生攻击B。</p>
+<p>释放派生攻击过程中，只检测派生动作的指令，由于其取消后摇的高有利，所以挥空或中断不利也会很高。</p>
+<p>派生攻击一般是无法直接释放的。</p>
+<h4 id="攻击取消"><a href="#攻击取消" class="headerlink" title="攻击取消"></a>攻击取消</h4><p>取消含义就是取消攻击后摇，其逻辑和派生攻击相像，若招式A可被B取消，其含义为：释放A后，未挥空，若能在A后摇某一帧之前搓出招式B即可取消A的后摇立即释放招式B</p>
+<p>还有一种更为严格的取消关系是：在A招式受击确认时检测是否搓出B，即在A成功攻击前搓出B才能达成取消关系，</p>
+<p>街霸六采取的是后者方案，这里我采取的是前者。</p>
+<h4 id="逻辑层和动画表现层的尽量统一"><a href="#逻辑层和动画表现层的尽量统一" class="headerlink" title="逻辑层和动画表现层的尽量统一"></a>逻辑层和动画表现层的尽量统一</h4><p>根动画</p>
+<p>Playerables API控制动画 </p>
+<p>动画速率与游戏逻辑帧并不一致，他取决于动画采样率 Sample Frame Rate 可以设置，因此游戏锁帧60，动画采样率也设置为60帧。</p>
+<h4 id="顿帧"><a href="#顿帧" class="headerlink" title="顿帧"></a>顿帧</h4><p>就是设定一段帧时间，攻击方和受击方在这段帧内动画速度降低。</p>
+<p>我对此也有异议：</p>
+<p>此次顿帧可以设置与动作帧同时进行，反之也可以</p>
+<p>举个例子：动作帧1-10，顿帧 J-L 在5帧时触发顿帧</p>
+<p>方法前者即1,2,3,4,(5|j),(6|k),(7|l),8,9,10 缺点是 导致后续动画在后摇帧内无法播放完全，需要计算后续动画播放速度，当然也可以不管，只要动画表现不突兀即可。</p>
+<p>后者 1,2,3,4,5,j,k,l,6,7,8,9,10 缺点是 影响了招式的帧数，所以弃用</p>
+<h3 id="动作事件"><a href="#动作事件" class="headerlink" title="动作事件"></a>动作事件</h3><ol>
+<li>发招时</li>
+<li>攻击触发时</li>
+<li>攻击结束时</li>
+<li>攻击取消时。</li>
+<li>前摇帧的一段时间里</li>
+<li>后摇帧的一段时间里</li>
+</ol>
+<h4 id="摄像机的跟随与变化"><a href="#摄像机的跟随与变化" class="headerlink" title="摄像机的跟随与变化"></a>摄像机的跟随与变化</h4><p>实现了一个摄像机脚本</p>
+<h3 id="AI行为树"><a href="#AI行为树" class="headerlink" title="AI行为树"></a>AI行为树</h3><p>​	命令模式的命令流+NodeCanvas行为树 效果很差劲，得再思考。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2024/03/09/%E6%A0%BC%E6%96%97%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E7%9A%84%E9%9A%8F%E7%AC%94/">https://cjforeal.github.io/2024/03/09/%E6%A0%BC%E6%96%97%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E7%9A%84%E9%9A%8F%E7%AC%94/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Unity/"># Unity</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/07/13/%E6%B8%B8%E6%88%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%AE%9E%E8%B7%B5/">游戏性能优化+实践</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>
