@@ -253,7 +253,7 @@
                     
                         <span class="post-count">
                     Words:
-                            <a href="">6.8k</a> 
+                            <a href="">7.7k</a> 
                         </span>
                     
 
@@ -261,7 +261,7 @@
                     
                         <span class="post-count">
                     Time:
-                            <a href="">27min</a> 
+                            <a href="">30min</a> 
                         </span>
                     
                 </div>
@@ -277,17 +277,19 @@
 <p>如何判断B在A的左侧？</p>
 <p>可以A叉乘B，看得到向量是正还是负，再通过右手螺旋定则，就可以了。</p>
 <p>这是一个二维生三维的升变公式。</p>
-<p>AB叉AP,BC叉BP,CA叉CP  三者结果若全都一个方向则在内部，反之不在</p>
 <p>平面坐标中，如何判断P点在ABC内部？</p>
+<p>AB叉AP,BC叉BP,CA叉CP  三者结果若全都一个方向则在内部，反之不在</p>
 <p>注意：得到的向量的方向满足于右手螺旋定则(某些的图形Api可能选左手，视情况定)，因此叉乘不满足交换律，因为结果向量的方向不同。</p>
 </li>
 </ol>
 <h1 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h1><ol>
-<li>矩阵乘法，不存在交换律，结合律分配律存在</li>
-</ol>
-<p>  <img src="/images/%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95.png" alt="image-20221024233926616"></p>
-<ol start="2">
+<li><p>矩阵乘法，不存在交换律，结合律分配律存在</p>
+<p>  <img src="/images/image-20221024233926616.png" alt="image-20221024233926616"></p>
+<p>A矩阵列数和B矩阵行数相同，再进行A行向量和B列向量的点乘。</p>
+</li>
 <li><p>矩阵转置<br>$$<br>(AB)^T &#x3D;B^TA^t<br>$$</p>
+</li>
+<li><p>旋转矩阵是正交矩阵，即逆矩阵就是矩阵的转置。</p>
 </li>
 <li><p>单位矩阵，矩阵的逆 忘了的话就看线代；</p>
 </li>
@@ -307,7 +309,7 @@
 <p>我们不想要平移成为特例，而是想着把平移旋转缩放等一起概括，所有有了齐次坐标。</p>
 <p><strong>齐次坐标</strong></p>
 <p><strong>二维坐标中，我们人为的加入了第三个坐标 w，并且定义为 w只能&#x3D;1或0;</strong></p>
-<p><strong>如果w&#x3D;1，坐标表示为2D的一个点，若等于0，则表示2D向量。</strong></p>
+<p><strong>如果w&#x3D;1，坐标表示为2D的一个点，若等于0，则表示无限长的2D向量。</strong></p>
 <p>因此如果我们用齐次坐标来表示平移时，就会有以下式子<br>$$<br>\begin{bmatrix}<br>xˋ\<br>yˋ\<br>wˋ<br>\end{bmatrix}<br>&#x3D;<br>\begin{bmatrix}<br>1&amp;0&amp;t_x\\<br>0&amp;1&amp;t_y\\<br>0&amp;0&amp;1<br>\end{bmatrix}<br>\begin{bmatrix}<br>x\\<br>y\\<br>1<br>\end{bmatrix}<br>&#x3D;<br>\begin{bmatrix}<br>x+t_x\\<br>y+t_y\\<br>1<br>\end{bmatrix}<br>$$<br>发现仅用矩阵乘法就可以很好的表示位移，就很舒服。****</p>
 <p>w的定义规则有一定原因</p>
 <ol>
@@ -362,13 +364,15 @@
 </li>
 <li><p>点绕z轴旋转，同上规则<br>$$<br>R_{z}(\alpha)&#x3D;<br>\begin{bmatrix}<br>cos\alpha&amp;-sin\alpha&amp;0&amp;0\\<br>sin\alpha&amp;cos\alpha&amp;0&amp;0\\<br>0&amp;0&amp;1&amp;0\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>$$</p>
 </li>
-<li><p>点绕y轴旋转有些不同,我的理解就是，绕y轴逆时针旋转对于xz平面其实是顺时针旋转，所以应为-alpha<br>$$<br>R_{z}(\alpha)&#x3D;<br>\begin{bmatrix}<br>cos\alpha&amp;0&amp;sin\alpha&amp;0\\<br>0&amp;1&amp;0&amp;0\\<br>-sin\alpha&amp;0&amp;cos\alpha&amp;0\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>$$<br>所以三维空间内任意一个绕任意轴的旋转都可以由绕xyz旋转组合而成。<br>$$<br>R_{(\vec{n},\alpha)}&#x3D;R_{(\vec{x},\alpha x)}\cdot R_{(\vec{y},y\alpha)}\cdot R_{(\vec{z},\alpha z)}<br>$$<br>而由于其分解和运算的过程很麻烦，就有了罗德里格斯旋转方程。</p>
+<li><p>  $$<br>  R_{z}(\alpha)&#x3D;<br>  \begin{bmatrix}<br>  cos\alpha&amp;0&amp;sin\alpha&amp;0\\<br>  0&amp;1&amp;0&amp;0\\<br>  -sin\alpha&amp;0&amp;cos\alpha&amp;0\\<br>  0&amp;0&amp;0&amp;1<br>  \end{bmatrix}<br>  $$<br>  所以三维空间内任意一个绕任意轴的旋转都可以由绕xyz旋转组合而成。<br>  $$<br>  R_{(\vec{n},\alpha)}&#x3D;R_{(\vec{x},\alpha x)}\cdot R_{(\vec{y},y\alpha)}\cdot R_{(\vec{z},\alpha z)}<br>  $$<br>  而由于其分解和运算的过程很麻烦，就有了罗德里格斯旋转方程。</p>
 </li>
 </ul>
 <h2 id="罗德里格斯旋转方程-Rodrigues"><a href="#罗德里格斯旋转方程-Rodrigues" class="headerlink" title="罗德里格斯旋转方程(Rodrigues)"></a>罗德里格斯旋转方程(Rodrigues)</h2><p>PASS~</p>
 <h1 id="三维到二维"><a href="#三维到二维" class="headerlink" title="三维到二维"></a>三维到二维</h1><p>从三维到二维有一个既定的过程，举一个现实中的栗子，摆拍</p>
 <p>摆拍首先得把人和物带到拍照的位置，就是平移缩放旋转等操作，这就是<strong>模型变换(Model Transformation)</strong>.</p>
+<p>模型变换的目的在于得到模型的世界坐标（模型空间到世界空间，摄像机知道模型的相对坐标）</p>
 <p>摆好相机的位置和相机的朝向，这就是 <strong>视图变换(View Transformation)</strong>.</p>
+<p>视图变换的目的在于把物体跟随相机移动的一个便于计算的位置，为了投影变换。</p>
 <p>然后开始拍照，就存在一个三维到二维投影的过程，这就是<strong>投影变换(Projection Transformation)</strong>.</p>
 <p> 三个合称<strong>MVP变换</strong>，得到的结果为<strong>MVP变换矩阵</strong>。</p>
 <h2 id="视图变换"><a href="#视图变换" class="headerlink" title="视图变换"></a>视图变换</h2><p>视图变换目的在于把所有物体变换到目标位置。这里得变换矩阵是根据<strong>摄像机</strong>变换得来的。</p>
@@ -383,10 +387,10 @@
 <p>为什么，因为好处多多。</p>
 <p>所以我们需要进行以下变换</p>
 <ul>
-<li>将相机坐标<strong>e</strong>平移到原点</li>
 <li>旋转<strong>g</strong>到**-z**</li>
 <li>旋转<strong>t</strong>到<strong>y</strong></li>
 <li>旋转<strong>g × t</strong> 到 <strong>x</strong>(1,0,0)</li>
+<li>将相机坐标<strong>e</strong>平移到原点</li>
 </ul>
 <p>首先平移矩阵最好写<br>$$<br>T_{(VIEW)}&#x3D;<br>\begin{bmatrix}<br>1&amp;0&amp;0&amp;-x_e\\<br>0&amp;1&amp;0&amp;-y_e\\<br>0&amp;0&amp;1&amp;-z_e\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>$$<br> 然后就是三个旋转，</p>
 <p>这里为了计算方便：选择逆向思维，我们先求-z到g，y到t，x到g x t的 这三个单位向量的旋转矩阵，得到的结果组合起来就是目标旋转矩阵的逆矩阵，然后又因为旋转矩阵是正交矩阵，所以将结果转置，就是我们要的目标矩阵了.</p>
@@ -413,17 +417,16 @@
 <p>之前开发2d游戏时对于视角的探索已经让我对两者有了很清晰的认识，现在来学习怎么实现的</p>
 <h2 id="正交投影"><a href="#正交投影" class="headerlink" title="正交投影"></a>正交投影</h2><p><img src="/images/%E6%AD%A3%E4%BA%A4%E6%8A%95%E5%BD%B1.png" alt="正交投影"></p>
 <p>如图 正交投影的特点是没有透视关系，近切面与远切面大小相同。</p>
-<p>而它的投影过程通俗来讲的话，就是一个压缩的过程：</p>
 <p>可视空间内的物体x,y坐标不变，将z坐标舍弃，形成一个二维平面，再将平面移动拉伸到一个左下角为(-1,-1),右上角为（1，1）的矩形中。</p>
-<p><em>为什么要映射在-1<del>1的矩形内，这是一个约定俗成的东西，相当于我们拍照，规定洗出的照片都得是2×2大小的，学opengl时学到一个标准化设备坐标系，范围也是-1</del>1，两者也对应起来了。</em></p>
-<p>规范点说法是：将上诉摄像机所观测的空间（即长方体，设为 S ）变换成一个<strong>标准立方体</strong>（<strong>canonical cube</strong>）。</p>
+<p><em>为什么要映射在-1<del>1的矩形内，为了后续计算更方便，是一个约定俗成的东西，相当于我们拍照，规定洗出的照片都得是2×2大小的，学opengl时学到一个标准化设备坐标系，范围也是-1</del>1，两者也对应起来了。</em></p>
+<p>正交投影通俗做法就是是：就是将空间中的一个立方体（即长方体，设为 S ）变换成一个<strong>标准立方体</strong>（<strong>canonical cube</strong>） 。</p>
 <p>何为标准立方体？即以原点为中心，边长为2的立方体，也就是立方形在x，y，z三个轴上都是从-1到1。</p>
 <p>整个变换过程就是我们的<strong>正交投影变换</strong>，其对应矩阵即为正交投影变换矩阵。该变换我们可以分为如下两步（这也体现了视图变换的重要性，使得我们做投影变换变得很简单）：</p>
 <ol>
 <li>平移变换，将长方体S平移到原点。</li>
 <li>缩放变换，将长方体S的长宽高缩放成2</li>
 </ol>
-<p>所以有正交投影变换矩阵（r,l,t,b,n,f 两两成对，分别为  近切面x,y,z最小及最大坐标）;<br>$$<br>M_{ortho}&#x3D;<br>\begin{bmatrix}<br>\frac{2}{r-l}&amp;0&amp;0&amp;-x_e\\<br>0&amp;\frac{2}{t-b}&amp;0&amp;-y_e\\<br>0&amp;0&amp;\frac{2}{n-f}&amp;-z_e\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>\begin{bmatrix}<br>1&amp;0&amp;0&amp;-\frac{r+l}{2}\\<br>0&amp;1&amp;0&amp;-\frac{t+b}{2}\\<br>0&amp;0&amp;1&amp;-\frac{n+f}{2}\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>$$</p>
+<p>所以有正交投影变换矩阵（r,l,t,b,n,f 两两成对，分别为  切面x,y,z最小及最大坐标）;<br>$$<br>M_{ortho}&#x3D;<br>\begin{bmatrix}<br>\frac{2}{r-l}&amp;0&amp;0&amp;-x_e\\<br>0&amp;\frac{2}{t-b}&amp;0&amp;-y_e\\<br>0&amp;0&amp;\frac{2}{n-f}&amp;-z_e\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>\begin{bmatrix}<br>1&amp;0&amp;0&amp;-\frac{r+l}{2}\\<br>0&amp;1&amp;0&amp;-\frac{t+b}{2}\\<br>0&amp;0&amp;1&amp;-\frac{n+f}{2}\\<br>0&amp;0&amp;0&amp;1<br>\end{bmatrix}<br>$$</p>
 <blockquote>
 <p><em>这里遗留了一个问题：没了z坐标 ，怎么判断物体的前后？</em></p>
 </blockquote>
@@ -472,7 +475,7 @@
 </blockquote>
 <p>所以视锥体内的一点压缩后的z<code>坐标会有变化吗？ $$ z</code>&#x3D;(n+f)*z-nf&#x3D;nz+fz-nf&#x3D;(z-f)*n+zf(0&gt;&#x3D;n&gt;&#x3D;z&gt;&#x3D;f)<br>$$<br>z-f&gt;0, (z-f)n &lt;0,同时 zf&lt;z&lt;0</p>
 <p>因此我们可以得出z&#96;&lt;z,变换后 z坐标 将会变小(右手坐标系)，即变换后离摄像机更远了。</p>
-<h2 id="屏幕映射"><a href="#屏幕映射" class="headerlink" title="屏幕映射"></a>屏幕映射</h2><p>结果前面的处理，我们得到了一个三维空间下的标准立方体[-1, 1]³，我们需要将他转到屏幕坐标系下，屏幕有以下特点</p>
+<h2 id="屏幕映射-视口变换"><a href="#屏幕映射-视口变换" class="headerlink" title="屏幕映射 视口变换"></a>屏幕映射 视口变换</h2><p>结果前面的处理，我们得到了一个三维空间下的标准立方体[-1, 1]³，我们需要将他转到屏幕坐标系下，屏幕有以下特点</p>
 <ul>
 <li>屏幕是光栅成像设备，其成像点通常理解为二维数组，数组元素为像素。</li>
 <li>屏幕坐标系原点此处为左下角(0,0)，定义宽度width，和高度height。</li>
@@ -481,7 +484,7 @@
 <p>先不管它的Z轴数据（由深度缓冲来处理），屏幕映射需要<strong>将X和Y轴 [-1, 1]² 映射到屏幕坐标 [0, width] x [0, height]<strong>，屏幕原点一般在左下角，通过齐次坐标的矩阵，先将 <strong>[-1, 1]² 缩放至 [width, height]，</strong>再平移使得原点坐标对齐，将标准立方体转换成屏幕空间，变换矩阵为</strong>：</strong><br>$$<br>M_{}^{4×4}&#x3D;<br>\begin{pmatrix}<br>\frac {width}2&amp;0&amp;0&amp;\frac {width}2\\<br>0&amp;\frac {height}2&amp;0&amp;\frac {height}2\\<br>0&amp;0&amp;1&amp;0\\<br>0&amp;0&amp;0&amp;1<br>\end{pmatrix}<br>$$</p>
 <h1 id="光栅化"><a href="#光栅化" class="headerlink" title="光栅化"></a>光栅化</h1><p>光栅化的目的在于将之前输出的数据包括 计算处理得到片元。就是要计算出每一个像素的RGB值。其工作主要是</p>
 <ol>
-<li><p>三顶点读取，两两连接，形成三角形。</p>
+<li><p>图元组装，三顶点读取，两两连接，形成三角形。</p>
 </li>
 <li><p>采样，遍历像素点，判断哪些像素位于三角形内</p>
 </li>
@@ -557,12 +560,14 @@
 <p>反射光的强度和入射光相比明显是更小的，这里影响系数是入射光和法向量的夹角θ的余弦(兰伯特定律Lambert’s Law)，就像使夏天太阳光直射北回归线，冬天直射南回归线时的强度变化。</p>
 <p>我们设入射光强度为<strong>I</strong>，则反射光强为<br>$$<br>Icosθ<br>$$<br>此外还有第二个影响要素，在真空环境下，在漫反射光的传播过程中，能量分布相当于是从小球壳到大球壳的传播的过程，根据能量守恒定律，小球壳上能量和大球壳上的能量是相等的，因此，大球壳单位面积上的能量就会更小，这里就存在一个单位面积光强和表面积的反比关系，设观察者离漫反射点的距离为<strong>R</strong>，则有<br>$$<br>Icosθ&#x2F;r^2<br>$$</p>
 <p>综合以上有漫反射公式<br>$$<br>L_{diffuse}&#x3D;\frac{I}{R^2}max(0,cosθ)<br>$$<br>加上物体表面漫反射系数k，并带入<strong>n,l</strong>,得到最终公式<br>$$<br>L_{diffuse}&#x3D;k_d\frac{I}{R^2}max(0,\vec n\cdot \vec l)<br>$$</p>
+<p><strong>漫反射光强取决于反射面法向量和入射光强的余弦。</strong></p>
 <h3 id="高光"><a href="#高光" class="headerlink" title="高光"></a>高光</h3><p>着色点材质较光滑时，反射接近镜面反射（但也仅是接近），与漫反射强度分析一致，分两步，反射后的强度衰减，反射光传播中的强度衰减，其中后者是相同的道理，这里需要明白前者。</p>
 <p>通俗理解，什么情况下，其强度会更强？那就是反射光越接近理论上的镜面反射光的时候，也就是说，观察者的观测向量越接近镜面反射光时，观测到的高光越强，计算接近程度时用两向量点乘。</p>
 <p><img src="/images/%E9%AB%98%E5%85%89.png" alt="高光"></p>
 <p>如图，定义镜面反射光为<strong>m</strong>，入射光强为<strong>I</strong>所以高光反射强度为<br>$$<br>I \vec v\cdot \vec m<br>$$<br>加上第二步中的公式，以及考虑物体表面高光反射系数k得到Phong模型下的高光公式<br>$$<br>L_s&#x3D;k_s(\frac{I}{R^2})max(0,\vec m\cdot \vec v)^p<br>$$<br>这里加个指数P是为了控制高光反射面积的大小和能够看到高光的范围。当<em>p</em>的值越大，反射面积(能看到高光的范围)越小。</p>
 <p>Blinn-Phong模型简化了镜面反射光的计算，经验化的转成了通过计算半程向量<strong>h</strong>和法向量<strong>n</strong>的接近程度。半程向量就是角平分线向量，四边形法则相加后单位化再即可<br>$$<br>\vec h&#x3D;\frac {\vec v +\vec l} {|\vec v +\vec l|}<br>$$</p>
 <p>所以有高光反射公式<br>$$<br>L_s&#x3D;k_s(\frac{I}{R^2})max(0,\vec n\cdot \vec h)^p<br>$$</p>
+<p><strong>高光反射强度取决于镜面反射光和出射光的余弦，近似的是法向量和半程向量的余弦。</strong></p>
 <h3 id="环境光"><a href="#环境光" class="headerlink" title="环境光"></a>环境光</h3><p>环境光就是从四面八方反射到来的光，这些光都有各自丰富的故事，很是复杂，这里大胆的假设光强全都一致(后续有全局光照，光追等)<br>$$<br>L_a&#x3D;k_aI_a<br>$$<br>通常就是材质的RGB数值。</p>
 <p>就这样把三个公式加起来就得到了Blinn-Phong模型的光照公式<br>$$<br>L&#x3D;k_d\frac{I}{R^2}max(0,\vec n\cdot \vec l)+k_s(\frac{I}{R^2})max(0,\vec m\cdot \vec v)^p+k_aI_a<br>$$</p>
 <h2 id="着色频率"><a href="#着色频率" class="headerlink" title="着色频率"></a>着色频率</h2><p>分为三种，也就是三种不同的着色算法</p>
@@ -576,10 +581,83 @@
 <li><p>Phong Shading 逐像素着色</p>
 </li>
 </ul>
-<h2 id="纹理-Texture-贴图-Map-映射-Mapping"><a href="#纹理-Texture-贴图-Map-映射-Mapping" class="headerlink" title="纹理(Texture) |贴图(Map)|映射(Mapping)"></a>纹理(Texture) |贴图(Map)|映射(Mapping)</h2><p>上述解决了着色时明暗问题，但是不同着色点的属性不一定相同，比如颜色，漫反射高光反射系数，为了解决这个问题，我们使用<strong>纹理</strong>。<strong>纹理就是着色点的属性，属性一词就包括了各式各样的数据，就是上面说的颜色，反射系数等数据。</strong></p>
-<p>而一个3D物体的表面有各式各样的着色点，如果我们把它的表面展开，就如下图</p>
+<p>着色频率的旋转取决于模型的复杂的（面，顶点的复杂度）</p>
+<h2 id="法线计算"><a href="#法线计算" class="headerlink" title="法线计算"></a>法线计算</h2><p>面：叉乘</p>
+<p>顶点：周围面法向量的平均</p>
+<p>三角形内的点：利用三角形重心坐标进行插值，即三角形面上的一点可以由三角形三个顶点来表示，那么三角形内的任意点的属性就可以由三个顶点的属性以重心坐标的形式表现出来。</p>
+<h2 id="材质-x2F-shader-x2F-贴图"><a href="#材质-x2F-shader-x2F-贴图" class="headerlink" title="材质&#x2F;shader&#x2F;贴图"></a>材质&#x2F;shader&#x2F;贴图</h2><p><strong>材质是一类物体属性的集合</strong>，<strong>用面向对象理解就是一个类</strong>，我们可以为其定义一些属性和方法，属性可以在定义类时决定，也可以后面实例化对象时再改，比如反射系数，顶点数据，shader就是定义的函数，用来处理顶点，曲面细分，几何，片元数据且输出数据的函数。</p>
+<p>贴图Texture个人理解认为包含两个部分，纹理和映射（UV坐标）</p>
+<p>纹理就是图片上的某点的数值（颜色贴图就是RGBA的值，法线贴图就是法线值），映射就决定了贴图的纹理和模型是如何对应的。</p>
+<p>一个3D物体的表面有各式各样的着色点，如果我们把它的表面展开，就如下图</p>
 <p><img src="/images/%E7%BA%B9%E7%90%86.png" alt="纹理"></p>
 <p>我们把右一图上某一点的纹理应用到了左一渲染图上的对应点，而这个过程，我们就称为<strong>纹理映射</strong>。右一图上保存着所有着色点的纹理和其他数据，如uv坐标等，这个图我们就称为<strong>贴图</strong>。</p>
+<h2 id="纹理过滤"><a href="#纹理过滤" class="headerlink" title="纹理过滤"></a>纹理过滤</h2><p>4k渲染图对应4k纹理没问题，像素点一一对应，</p>
+<p>但如果是1080p的纹理呢？那么像素点映射的纹理坐标会是一个小数，那么到底映射什么纹理就成了问题</p>
+<p>比如就近原则，或者双线性插值（周围四个采样点，xy坐标插值）</p>
+<p>如果8k纹理呢？也不行，一个像素点就取了多个纹理值，采样频率跟不上信号变化频率，会出现走样问题。</p>
+<p>超采样可以解决这个问题，但消耗很多，纹理过滤也还行，但当一个像素对应100x100的纹理呢？周围几个或上十个纹理插值解决不了问题。</p>
+<p>所以用什么？MipMap！</p>
+<h2 id="MipMap（多级渐远纹理）"><a href="#MipMap（多级渐远纹理）" class="headerlink" title="MipMap（多级渐远纹理）"></a>MipMap（多级渐远纹理）</h2><p><img src="/images/Mipmap.png" alt="mipmap"></p>
+<p>如上图所示，启用MipMap会生成多级纹理，一张128x128的纹理会渐进生成多级纹理，从第0级128x128开始，每一级是上一级的一半分辨率，直到1x1，最终纹理空间只多了三分之一。</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>128x128</td>
+</tr>
+<tr>
+<td>1</td>
+<td>64x64</td>
+</tr>
+<tr>
+<td>2</td>
+<td>32x32</td>
+</tr>
+<tr>
+<td>3</td>
+<td>16x16</td>
+</tr>
+<tr>
+<td>4</td>
+<td>8x8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>4x4</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2x2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1x1</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>如何应用？</p>
+<p>比如：2*2的像素需要映射128*128的纹理像素时，计算一颗像素需要映射到纹理像素为64*64，在Mipmap纹理中里寻找最接近64*64纹理像素的多级渐远纹理（也可以在mipmap层级之间进行插值），并使用此多级渐远纹理进行采样。<br>$$<br>log_264&#x3D;6<br>$$</p>
+<p>所以使用 第五级 2x2 纹理。</p>
+<p>如果映射纹理像素为90x90呢？</p>
+<p>进行三线性插值</p>
+<p>在第0级和第1级纹理分别进行双线性插值得到两个结果</p>
+<p>再对这两个结果进行插值运算即可。</p>
+<p>优点:</p>
+<pre><code>    1. 质量高：避免了像素映射过大纹理时造成的采样频率低和数据频率高造成的失真和摩尔纹，效果比无Mipmap好得多。
+</code></pre>
+<p>​	  2. 性能好：避免了不使用Mipmap下距离远时采样频率低和数据频率高而照成texture cache命中率不高(相邻Pixel采样Texel时uv相差比较大)使性能下降。</p>
+<p>  缺点：</p>
+<pre><code>     1. 占用显存。
+        2. 只能进行纹理的正方形范围查询（特向异性过滤）
+</code></pre>
 
         </div>
 
