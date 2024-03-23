@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="cjforeal">
+
+
+
+
+
+<title>Cjforeal</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">cj&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">cj&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title"></h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">cjforeal</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 22, 2024&nbsp;&nbsp;2:20:37</a>
+                        </span>
+                    
+                     
+
+
+                    
+                        <span class="post-count">
+                    Words:
+                            <a href="">2.2k</a> 
+                        </span>
+                    
+
+                    
+                    
+                        <span class="post-count">
+                    Time:
+                            <a href="">7min</a> 
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <hr>
+<p>title:面试随笔1-纠结语言特性<br>category:面试<br>tags:面试随笔<br>date:2024-03-22 02:20:36</p>
+<hr>
+<h3 id="写在前头"><a href="#写在前头" class="headerlink" title="写在前头"></a>写在前头</h3><p>今天一面，面试官问了一个问题：</p>
+<p><strong>Lua语言本身进行热更新的原理&#x2F;优势 是什么？</strong></p>
+<p>我模棱两可的回答了出来，但心头语塞，我知道lua是一个解释型语言，知道他零碎的语言特质，但问题就是零碎，我回想着之前从各个地方收集的琐碎信息，动态语言，编译器，解释器，JIT,AOH，lua虚拟机，代码编译的过程，却不能给出一个让自己满意的答案，我很难受，我在这方面的知识并没有形成体系，这就是问题所在。</p>
+<p><strong>所以本文就是一个信息的统一，一次体系化的过程</strong>。并且在此过程中发现之前接收的一部分信息是多么的<strong>trash</strong>！我还自以为是正确答案🙄。。。</p>
+<h3 id="动态语言-x2F-静态语言"><a href="#动态语言-x2F-静态语言" class="headerlink" title="动态语言&#x2F;静态语言"></a>动态语言&#x2F;静态语言</h3><p>动态编程语言是一类高级编程语言，它在运行时执行静态语言在编译期间执行的许多常见编程行为。总体来说动态语言和静态语言的区别如下：</p>
+<ul>
+<li><strong>类型&#x2F;对象运行时变更</strong>，即支持运行时生成新的类或对象。例如c#就可以运用<strong>反射</strong>，获取类的构造器创建一个新的实例，改变一个对象状态。,借助<code>System.Reflection.Emit</code>库运行时动态创建新的程序集，添加新的类型&#x2F;接口&#x2F;特性。</li>
+<li><strong>类型检查</strong>：静态语言通常在编译时就确定了变量类型，比如c#在声明变量时就要确定类型，即使使用<code>var</code>关键字也是在编译时确定的（由于var关键字声明变量时必须初始化的规则，根据赋值在编译时确定类型），动态语言通常在运行时确定类型，比如lua，c#中的<strong>Dynamic</strong>关键字声明变量,is as运行时类型检查和匹配。</li>
+<li><strong>可变内存分配</strong>：静态编程语言（可能是间接的）要求开发人员在编译之前定义所使用的内存大小（除非使用指针逻辑）。动态语言隐式地需要基于程序个体操作（重新）分配内存。</li>
+</ul>
+<p>其实当前语言的动态还是静态划分的不需要多么清晰，一门语言可以同时具备动态静态的特点。（当然c#还是被称为静态语言）例如我大.NET，通过<strong>DLR动态语言运行时</strong>，给旗下静态语言添加了动态语言的特点。（怎么实现的？我不知道）</p>
+<h3 id="编译型语言-x2F-解释型语言"><a href="#编译型语言-x2F-解释型语言" class="headerlink" title="编译型语言&#x2F;解释型语言"></a>编译型语言&#x2F;解释型语言</h3><h4 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h4><p><strong>编译器</strong>（compiler）是一种<strong>计算机程序</strong>，它会将某种编程语言写成的源代码转换成另一种目标代码（包括中间代码&#x2F;机器码）。它<strong>从前</strong>最主要的特点是什么呢？是把代码全部编译完之后再执行。</p>
+<h4 id="解释器"><a href="#解释器" class="headerlink" title="解释器"></a>解释器</h4><p><strong>解释器</strong>（英语：interpreter）,也是一个<strong>程序</strong>，能够把解释型语言解释执行。它最主要的特点是什么呢？在程序执行时将代码逐句解释’逐句‘执行。因此依赖于解释器的程序<strong>运行速度</strong>比较缓慢。解释器的好处是它<strong>不需要重新编译</strong>整个程序，从而减轻了<strong>每次程序更新后编译的负担</strong>。</p>
+<p>然后我看到了一个JIT编译器：他的描述是程序执行时边编译边执行，<strong>然后我就WTF了，你又叫编译器又不是先编译完再执行！你搁这犟嘴呢！</strong></p>
+<p>我们先把JIT编译器分开来看，我们知道了编译器是什么，JIT是什么？</p>
+<h3 id="JIT"><a href="#JIT" class="headerlink" title="JIT"></a>JIT</h3><p><strong>Just-in-time compilation 即时编译</strong>，<strong>是一种执行计算机代码的方法模式</strong>，这种方法设计在程序执行过程中而不是在执行之前进行编译。通常，这包括源代码或更常见的字节码到机器码的转换，然后直接执行。</p>
+<p>JIT编译是两种传统的机器代码翻译方法——提前编译（AOT）和解释器——的结合，它结合了两者的优点和缺点。大致来说，JIT编译，包含了解释器的开销以及编译和<strong>链接</strong>的开销，又结合了编译的速度与解释的灵活性。</p>
+<p><strong>JIT就这意思，但这还是没能解释这种命名的冲突</strong>？<strong>为什么不叫JIT解释器，为什么不叫JIT编译器pro？ 为什么不叫JIT编译plus解释器？</strong></p>
+<p><strong>我的回答是什么呢？一个名字而已你纠结个der啊！（很显然这是我纠结后的回答）</strong>，<strong>重点不是编译器三字，重点是它结合了AOT和解释器双方的优点，是动态编译的一种实现方式。</strong></p>
+<p>既然说到了AOT，我们再看看AOT又是个什么东西。</p>
+<h4 id="AOT"><a href="#AOT" class="headerlink" title="AOT"></a>AOT</h4><p><strong>提前编译（AOT compilation）是在程序执行之前将高级编程语言编译为低级语言的方法模式</strong>，于此行为模式相对应的就是先前说的’’编译器’’了。它有两大好处：</p>
+<ul>
+<li>减少运行时开销。</li>
+<li>AOT编译器可以执行复杂和高级的代码优化。</li>
+</ul>
+<h3 id="这里我做一个简单的总结："><a href="#这里我做一个简单的总结：" class="headerlink" title="这里我做一个简单的总结："></a>这里我做一个简单的总结：</h3><ol>
+<li>动态语言和静态语言区别：<strong>类型检查的时机不同，类型&#x2F;对象可否运行时变更，是否允许可变内存分配</strong></li>
+<li>将源代码转换成目标代码的<strong>程序</strong>一般有三个，<strong>AOT编译器</strong>，<strong>解释器</strong>，<strong>JIT编译器（结合了解释器）</strong>。</li>
+<li><strong>JIT,AOT都是处理代码的一种方法模式</strong>，前者在执行时，后者在执行前，<strong>两者概念上对立，但在编译器的实现上是可以并存共融的</strong>。</li>
+<li>无论动态语言还是静态语言，无论编译型语言，还是解释型语言，<strong>语言发展的趋势永远是取精华去糟粕的，这些严格的概念分离其实会变得越来越模糊，需要理解，但无需纠结</strong>。</li>
+</ol>
+<h3 id="回头看C-的编译执行过程"><a href="#回头看C-的编译执行过程" class="headerlink" title="回头看C#的编译执行过程"></a>回头看C#的编译执行过程</h3><p>我们知道c#.NetCore有两种运行时，一种叫CoreCLR，另外一个叫CoreRT。</p>
+<ul>
+<li><p><em>c#在.CoreRT下编译执行过程：</em></p>
+<p>c#源代码&#x3D;&gt;Roslyn 编译器&#x3D;&gt;中间代码IL(.dll&#x2F;.exe)&#x3D;&gt; CoreRT.RyuJIT 编译器(AOT式)&#x3D;&gt;机器码运行。</p>
+</li>
+<li><p><em>c#在CoreCLR下编译执行过程：</em></p>
+<p>c#源代码&#x3D;&gt;Roslyn 编译器&#x3D;&gt;中间代码IL(.dll&#x2F;.exe)&#x3D;&gt;CoreCLR.RyuJIT 编译器(JIT式)&#x3D;&gt;机器码运行</p>
+<p>|编					译				阶						段                  |	|执					行					阶								段|</p>
+</li>
+</ul>
+<p>			</p>
+<p>首先看看编译阶段Roslyn对c#原生代码做了什么事[1]</p>
+<p><img src="/images/roslyn.png" alt="roslyn"></p>
+<p><em>我们反射利用的程序集的元数据就是该编译器生成的。</em></p>
+<p>于是就生成了dll动态链接库，或者exe程序，其本质就是IL代码。</p>
+<p>然后执行阶段，我们点击exe文件，其实就是IL指令，由RyuJIT 编译器动态运行，cpu加载。</p>
+<blockquote>
+<p>注意的是，非托管代码由NativeRuntime‘管理’，他会被直接编译为本机机器代码。</p>
+</blockquote>
+<h3 id="Unity"><a href="#Unity" class="headerlink" title="Unity"></a>Unity</h3><p>Mono运行时虚拟机JIT&#x2F;苹果平台下Full AOT，IL2CPP虚拟机 AOT </p>
+<h3 id="最后再来回答最先的问题：“Lua语言本身进行热更新的原理-x2F-优势-是什么？”"><a href="#最后再来回答最先的问题：“Lua语言本身进行热更新的原理-x2F-优势-是什么？”" class="headerlink" title="最后再来回答最先的问题：“Lua语言本身进行热更新的原理&#x2F;优势 是什么？”"></a>最后再来回答最先的问题：“Lua语言本身进行热更新的原理&#x2F;优势 是什么？”</h3><p>脚本热更新本质就是更新代码文件，c#也可以实现热更新，我们把游戏逻辑代码分为无需热更新模块A,需要热更新的模块B，</p>
+<p>对于模块A，通过动态编程&#x2F;反射的模式，获取B类数据，实例化对象，调用方法。更新时对于模块B直接替换为同名Dll就好了。</p>
+<p>更高级的，就利用HybirdClR，ILRuntime的那种c#热更新的方式。</p>
+<p>而Lua语言的优势</p>
+<ol>
+<li>作为一门解释型的语言，通过ANSI C 编译器生成字节码，由lua虚拟机解释为机器码本地执行，也适合IOS平台的热更新，且开发和调试效率更高。</li>
+<li>作为一门纯动态型的语言，其编程本就是动态性的，比如其动态模块加载机制require（lua脚本），在热更新时直接替换脚本即可。</li>
+<li>包体小，轻便</li>
+</ol>
+<p>劣势就是不好写。</p>
+<h4 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h4><ol>
+<li><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B7%A8%E8%AD%AF%E5%99%A8">.编译器 - 维基百科，自由的百科全书 (wikipedia.org)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E5%99%A8">.解释器 - 维基百科，自由的百科全书 (wikipedia.org)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%B3%E6%99%82%E7%B7%A8%E8%AD%AF">即时编译 - 维基百科，自由的百科全书 (wikipedia.org)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2322584">【深入浅出C#】章节 9: C#高级主题：反射和动态编程-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/vipyoumay/p/5603928.html">简析.NET Core 以及与 .NET Framework的关系 - 帅虫哥 - 博客园 (cnblogs.com)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://chebincarl.github.io/2019/10/19/%E4%B8%BA%E4%BB%80%E4%B9%88iOS%E6%97%A0%E6%B3%95%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDDll%EF%BC%9F/">为什么iOS无法动态加载Dll？ | 车斌的博客 (chebincarl.github.io)</a></p>
+</li>
+</ol>
+<p>​                                                                                                                                                                         </p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>cjforeal</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://cjforeal.github.io/2024/03/22/%E9%9D%A2%E8%AF%95%E9%9A%8F%E7%AC%94/">https://cjforeal.github.io/2024/03/22/%E9%9D%A2%E8%AF%95%E9%9A%8F%E7%AC%94/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span></span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/09/%E6%A0%BC%E6%96%97%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E7%9A%84%E9%9A%8F%E7%AC%94/">格斗游戏开发的随笔</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+  
+ <div id="gitalk-container"></div>  
+ <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script type="text/javascript">
+
+ var gitalk = new Gitalk({
+
+ clientID: '3142d3c8eafcc4ea9dd7',
+
+ clientSecret: 'c121752e97a91b3de38ddabdfc3e219b69efbd98',
+
+ repo: 'cjforeal.github.io',
+
+ owner: 'cjforeal',
+
+ admin: 'cjforeal',
+
+ id: md5(location.pathname), 
+
+ labels: 'Gitalk'.split(',').filter(l => l),
+
+ perPage: 15,
+
+ pagerDirection: 'last',
+
+ createIssueManually: true,
+
+ distractionFreeMode: false
+
+ })
+
+ gitalk.render('gitalk-container')
+
+</script>
+  
+
+
+            </div>
+            <footer id="footer" class="footer">
+ 	<div class="copyright">
+ 		<span>© cjforeal | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+ |
+ <!-- 访客数量 -->
+ 
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+		<span class="site-uv">
+		总访客量:
+ 				<i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+			</span>&nbsp;
+		
+	
+		<span class="site-pv">
+		| 总访问量:
+				<i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+	</span>
+
+ 
+ </span>
+ 	</div>
+</footer>
+
+    </div>
+</body>
+
+</html>
